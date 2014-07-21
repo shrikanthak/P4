@@ -1,0 +1,20 @@
+.headercolor
+{
+	background-color:rgba(167,232,255,0.24);
+}
+.navbarcolor
+{
+	background-color:black;
+}
+
+.masteroutline
+{
+	box-shadow:40px 40px 50px 20px black;	
+	min-height: 900px;
+}
+
+.loginmenu
+{
+	font-size:20px;
+	font-weight: bold;
+}

@@ -1,0 +1,14 @@
+.asideformat
+{
+	width:300px;
+	border: 2px solid black;
+    overflow:auto;
+    float:right;
+    margin-bottom:0px;
+    margin-top:5px;
+}
+
+.sectionformat
+{
+	float:left;
+}
