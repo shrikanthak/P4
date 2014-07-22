@@ -15,6 +15,11 @@
 
 .loginmenu
 {
-	font-size:20px;
+	font-size:30px;
 	font-weight: bold;
+}
+.searchform
+{
+	margin-top: 2px;
+	margin-bottom: 2px;
 }
