@@ -44,7 +44,7 @@
 				<!--form method='POST' action='/search'-->
 					<div class="col-xs-8"></div>
 					<div class="col-xs-3">	
-						<input type="text" name="txtSearch" class="form-control searchform" placeholder="Name, Email ID or Department">
+						<input type="text" name="txtSearch" class="form-control searchform" placeholder="Name, Login ID or Department">
 					</div>
 					<div class="col-xs-1">
 						<input type="submit" name="btnSubmitSearch" class="btn btn-info searchform" value="Search">
@@ -57,11 +57,10 @@
 			@yield('bodycontent')
 
 		</div>
+		@yield('footercontent')
 		
-		{{ HTML::script('http://code.jquery.com/jquery-latest.min.js'); }}
+		{{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js');}}
 		{{ HTML::script('js/bootstrap.min.js'); }}
-		<!--script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	    <script src="js/bootstrap.min.js"></script-->
 
 	</body>
 

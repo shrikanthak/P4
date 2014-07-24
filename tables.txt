@@ -1,29 +1,44 @@
-employee_login
+employees
 --------------
-id
-first_name
-last_name
-email_address
-password
-image_path
-hr_access
+id							autointeger
+first_name					varchar
+last_name					varchar
+login						varchar
+password					varchar
+position_id	FK				integer
+supervisor_id	FK			integer
+portal_id		FK			integer
+group_id		FK			integer
 
 employee_portal
 ---------------
-id
-employee_id
-biography
-interests
+employee_id					integer FK
+imagefile					varchar
+employee_info				text
 
-employee_department
+expertise
+-----------------
+id PK						autointeger
+expertise					varchar
+
+employee_expertise
+------------------
+employee_id - FK									
+expertise_id - FK
+
+positions
 -------------------
-id
-employee_id
-job_title
-department_id
-supervisor_id
+id							autointeger
+supervisor_id - FK			unsigned integer
+group_id - FK				unsigned integer
 
 departments
 -------------------
-id
-department_name
+id - PK						autointeger
+department_name				varchar
+
+groups
+------------------
+id - PK						autointeger
+group_name					varchar
+department_id FK			integer unsigned

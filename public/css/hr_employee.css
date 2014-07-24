@@ -1,0 +1,14 @@
+.floatleft
+{
+	float:left;
+}
+
+.floatright
+{
+	float:right;
+}
+
+.floatcenter
+{
+	margin:0 auto;
+}

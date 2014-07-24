@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmployeePortalTable extends Migration {
+class CreateExpertiseTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,14 +12,13 @@ class CreateEmployeePortalTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('employee_portal',function($table)
+		//
+		Schema::create('expertise',function($table)
 		{
+			//Setting up the columns
 			$table->increments('id');
+			$table->string('expertise')->nullable(false)->unique();
 			$table->timestamps();
-			$table->integer('employee_id');
-			$table->string('imagefile');
-			$table->text('biography');
-			$table->text('interests');
 		});
 	}
 
@@ -31,7 +30,7 @@ class CreateEmployeePortalTable extends Migration {
 	public function down()
 	{
 		//
-		Schema::drop('employee_portal');
+		Schema::drop('expertise');
 	}
 
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmployeeDepartmentTable extends Migration {
+class CreatePositionsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -13,15 +13,14 @@ class CreateEmployeeDepartmentTable extends Migration {
 	public function up()
 	{
 		//
-		Schema::create('employee_department',function($table)
-		{
+		Schema::create('positions',function($table)
+		{	
 			$table->increments('id');
+			$table->string('title')->nullable(false);
+			$table->integer('group_id')->unsigned();
+			$table->boolean('hr_access')->default(false);
 			$table->timestamps();
-			$table->integer('employee_id');
-			$table->integer('department_id');
-			$table->integer('supervisor_id');
-			$table->string('title');
-			$table->integer('group_id');
+
 		});
 	}
 
@@ -33,7 +32,8 @@ class CreateEmployeeDepartmentTable extends Migration {
 	public function down()
 	{
 		//
-		Schema::drop('employee_department');
+		//
+		Schema::drop('positions');
 	}
 
 }

@@ -12,15 +12,29 @@ class CreateDepartmentGroupTable extends Migration {
 	 */
 	public function up()
 	{
-		//
-		Schema::create('department_group',function($table)
+		//departments table
+
+		Schema::create('departments',function($table)
 		{
 			$table->increments('id');
+			$table->string('name');
 			$table->timestamps();
-			$table->integer('department_id');
-			$table->string('group_name');
 
 		});
+
+		//groups table
+		Schema::create('groups',function($table)
+		{
+			$table->increments('id');
+			$table->string('name');
+			$table->integer('department_id')->unsigned();
+			$table->timestamps();
+
+			//setting up foreign key
+			$table->foreign('department_id')->references('id')->on('departments');
+
+		});
+
 	}
 
 	/**
@@ -30,8 +44,9 @@ class CreateDepartmentGroupTable extends Migration {
 	 */
 	public function down()
 	{
-		//
-		schema::drop('department_group');
+		schema::drop('groups');
+		schema::drop('departments');
+		
 	}
 
 }
