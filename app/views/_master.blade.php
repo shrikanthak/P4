@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 	<head>
+		
 		<title>Welcome to the Employee Portal!</title>
 		<!--link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/master.css" rel="stylesheet">
@@ -11,6 +12,7 @@
 		{{ HTML::script('js/respond.js'); }}
 
     	@yield('headsection')
+
 	</head>
 	
 	<body>
@@ -19,16 +21,29 @@
 			
 			<!--Login Section on the top-->
 			<div class="row headercolor">
-				<div class="col-xs-10">
-				</div>
-				<div class="col-xs-2">
-					<!-- If user not logged in display log in menu option-->
-					<!--Else display link to employee home page-->
-					@if(!Session::has('logged_in'))
-						<a href="/login" class="loginmenu">Employee Login</a>
-					@else
+				<div class="col-xs-12 pull-right">
+					<ul class="nav nav-pills navbar-right">
+						<li><a href="/">Home</a></li>
+						<!-- If user not logged in display log in menu option-->
+						@if(Auth::check())
 						
-					@endif
+							<!--Else display link to employee home page-->		
+							<li class="active"><a href="/employee/view">Your Info</a></li>
+							
+							<!-- If hr person display menu for HR page-->
+							@if(Session::has('view_hr_tab'))
+								<li><a href="/hr_page">Login</a></li>
+							@endif
+							
+							<!-- Link to reset password -->
+							<li><a href="/passwordreset">Change Password</a></li>
+						
+						@else
+							
+							<li class="active"><a href="/login">Login</a></li>
+						
+						@endif
+					</ul>
 				</div>
 			</div>
 			

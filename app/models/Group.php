@@ -3,10 +3,13 @@
 class Department extends Eloquent
 {
 	protected $table='departments';
+	protected $fillable = array('name');
+
 	public function grouplist()
 	{
 		return $this->hasMany('Group','depatment_id');
 	}
+
 }
 
 
