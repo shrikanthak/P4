@@ -4,14 +4,14 @@ global:
 web1:
   after_build:
     - "if [ ! -f composer.phar ]; then curl -s http://getcomposer.org/installer | php; fi; php composer.phar install"
-  name: shriak-p4
+  name: shriak-p3
   shared_writable_dirs:
     - /app/storage/cache
     - /app/storage/logs
     - /app/storage/meta
     - /app/storage/sessions
     - /app/storage/views
-	- /app/public/images
+	- /public/images
   document_root: public
   php_version: 5.4.14
   php_extensions:
