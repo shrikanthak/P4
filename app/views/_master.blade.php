@@ -49,7 +49,7 @@
 			
 			<!--Header Section-->
 			<div class="row headercolor">
-				{{ HTML::image('images/logo.png', 'Employee Page Logo') }}
+				{{HTML::image('./images/logo.png', 'Employee Page Logo');}}
 				<!--image src="images/logo.png"/-->
 			</div>
 			
