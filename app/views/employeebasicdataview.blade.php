@@ -1,5 +1,5 @@
 <?php $name= $data['first_name']." ".$data['last_name'];
-$imagefile=$data['image']!=''?'./images/'.$data['image']:'';
+$imagefile=$data['image']!=''? '/images'.'/'.$data['image']:'';
 $supervisor_id=$data['supervisor_id']>0?"/employee/view/".$data['supervisor_id']:'';
 ?>
 
