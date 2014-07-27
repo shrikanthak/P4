@@ -103,15 +103,7 @@ Route::post('employee/save', array('before' => 'csrf|auth',
 
 				$name=uniqid().".".Input::file('fileImageInput')->guessExtension();
 				
-				if (App::environment()=='local')
-				{
-					$filepath=public_path().'/images';
-				}
-				elseif (App::environment()=='production')
-				{
-					$filepath='public/images';
-				}
-				
+				$filepath='./images';
 
 				if ($filename!=''? file_exists ($filepath.'/'.$filename) : false)
 				{
