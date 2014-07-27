@@ -18,11 +18,11 @@ class Group extends Eloquent
 	protected $table='groups';
 	public function department()
 	{
-		return $this->belongsTo('Department','department_id')
+		return $this->belongsTo('Department','department_id');
 	}
 
 	public function employee()
 	{
-		return $this->hasMany('Employee','group_id')
+		return $this->hasMany('Employee','group_id');
 	}
 }

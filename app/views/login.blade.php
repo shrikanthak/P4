@@ -9,8 +9,8 @@
       
       {{Form::open(array('url'=>'/authenticate','method'=>'POST'))}}
         <div class="form-group">
-          <label for="login">Email address</label>
-          <input type="password" name='login' class="form-control" id="login" placeholder="Login ID">
+          <label for="login">Login ID</label>
+          <input type="text" name='login' class="form-control" id="login" placeholder="Login ID">
         </div>
         <div class="form-group">
           <label for="password">Password</label>

@@ -18,11 +18,13 @@ Route::get('/', function()
 		return View::make('welcome');
 	});	
 
-Route::post('/login', array('before' => 'csrf',
+Route::post('/authenticate', array('before' => 'csrf',
 	
 	function() 
 	{
-		if (Auth::attempt(array('login'=>Input::only('login'), 'login'=>Input::only('password')), $remember = false)) 
+		$credentials=Input::only('login','password');
+		
+		if (Auth::attempt($credentials,$remember=false)) 
 		{
 		    return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
 		}
@@ -36,7 +38,6 @@ Route::post('/login', array('before' => 'csrf',
   ));
 
 
-
 //This function is called to make login
 Route::get('/login',function()
 	{
@@ -44,6 +45,13 @@ Route::get('/login',function()
 
 	});
 
+//This function is called to make login
+Route::get('/logout',function()
+	{
+		Auth::logout();
+		return View::make('welcome');
+
+	});
 
 //Route for searhing based on search string input by the user
 Route::get('/search', function()
@@ -54,67 +62,108 @@ Route::get('/search', function()
 	});
 
 //Route for employee to view his data
-Route::get('employee/view/', function()
+Route::get('employee/view/{empid?}', array('before' => 'auth',function($empid=-1)
 {
-	if (Session::has('id'))
+	$findId=(integer)($empid==-1 ? Auth::user()->id : $empid);
+
+	$employee=Employee::with('employee_portal')->with("position")->with("group.department")->find($findId);
+
+	$data=array(
+	"current_id"=>$employee->id,
+	"first_name"=>$employee->first_name,
+	"last_name"=>$employee->last_name,
+	"title"=>$employee->position->title,
+	"department"=>(!!$employee->group->department)?$employee->group->department->name:'',
+	"group"=>$employee->group->name,
+	"supervisor"=>(!!$employee->supervisor)?$employee->supervisor->first_name." ".$employee->supervisor->last_name:'',
+	"supervisor_id"=>(!!$employee->supervisor)?$employee->supervisor->id:0,
+	"image"=>$employee->employee_portal->imagefile,
+	"paragraph"=>$employee->employee_portal->employee_info);
+
+	return View::make('employeeview')->with('data',$data);
+	
+
+}));
+
+Route::post('employee/save', array('before' => 'csrf|auth',
+	function()
 	{
+		$employee=Employee::with('employee_portal')->find(Auth::user()->id);
 
+		if(Input::has('employee_info'))
+		{	
+			$employee->employee_portal->employee_info=Input::get('employee_info');
+		}
+		$flash_message='';
 
-		$id=Session::get('id');
+		if(Input::hasFile('fileImageInput'))
+		{
+			if (getimagesize(Input::file('fileImageInput')->getRealPath()))
+			{
+				$filename=$employee->employee_portal->imagefile;
 
-		$paragraph="Eget lectus proin vivamus donec nullam placerat a lorem, senectus enim non consequat cras litora. Facilisis praesent tellus curabitur scelerisque proin potenti metus purus accumsan eu sodales eros, ultricies urna donec proin potenti nibh ipsum commodo fermentum leo. Porttitor ultrices aliquam erat sodales lorem purus cubilia leo morbi nullam, habitasse nibh class sapien pharetra cursus vel per morbi. Tempus faucibus litora facilisis volutpat elit netus auctor per, lacinia rutrum ullamcorper ad lacinia non molestie massa, lorem nam consectetur congue dolor litora sit. Id auctor cras quisque placerat convallis scelerisque taciti, scelerisque viverra fames donec pretium sagittis nullam et, suspendisse litora torquent dictum congue nullam.";
+				$name=uniqid().".".Input::file('fileImageInput')->guessExtension();
+				
+				if (App::environment()=='local')
+				{
+					$filepath=public_path().'/images';
+				}
+				elseif (App::environment()=='production')
+				{
+					$filepath='/images';
+				}
+				
 
-		$data=array(
-		"first_name"=>"Shrikanth",
-		"last_name"=>"Ananthakrishnan",
-		"title"=>"Software Engineer",
-		"department"=>"PDM",
-		"group"=>"",
-		"supervisor"=>"Chris Ryan",
-		"image"=>"ShriAnan.jpg");
+				if ($filename!=''? file_exists ($filepath.'/'.$filename) : false)
+				{
+					unlink ($filepath.'/'.$filename); 	
+				}
+				Input::file('fileImageInput')->move($filepath, $name);
 
+				$employee->employee_portal->imagefile=$name;
+			}
+			else
+			{
+				$flash_message="File uploaded is not an image file";
+			}
+		}
+		
+		$employee->push();
 
-		return View::make('employeeview')->with('paragraph',$paragraph)->with('bView',true)->with('data',$data);
+		if ($flash_message!='')
+		{
+			return Redirect::to('employee/view')->with('flash_message',$flash_message);
+		}
+		else
+		{
+			return Redirect::to('employee/view');
+		}
+		
 	}
-
-});
-
-//-------------------------------------------
-
-//Route for employee to edit his data
-Route::get('employee/edit/', function()
-{
-	$paragraph="Eget lectus proin vivamus donec nullam placerat a lorem, senectus enim non consequat cras litora. Facilisis praesent tellus curabitur scelerisque proin potenti metus purus accumsan eu sodales eros, ultricies urna donec proin potenti nibh ipsum commodo fermentum leo. Porttitor ultrices aliquam erat sodales lorem purus cubilia leo morbi nullam, habitasse nibh class sapien pharetra cursus vel per morbi. Tempus faucibus litora facilisis volutpat elit netus auctor per, lacinia rutrum ullamcorper ad lacinia non molestie massa, lorem nam consectetur congue dolor litora sit. Id auctor cras quisque placerat convallis scelerisque taciti, scelerisque viverra fames donec pretium sagittis nullam et, suspendisse litora torquent dictum congue nullam.";
-	$data=array(
-			"first_name"=>"Shrikanth",
-			"last_name"=>"Ananthakrishnan",
-			"title"=>"Software Engineer",
-			"department"=>"PDM",
-			"supervisor"=>"Chris Ryan",
-			"image"=>"ShriAnan.jpg");
-	return View::make('employeeview')->with('paragraph',$paragraph)->with('bView',false)->with('data',$data);
-});
-
-Route::get('employee/edit/', function()
-{
-	$paragraph="Eget lectus proin vivamus donec nullam placerat a lorem, senectus enim non consequat cras litora. Facilisis praesent tellus curabitur scelerisque proin potenti metus purus accumsan eu sodales eros, ultricies urna donec proin potenti nibh ipsum commodo fermentum leo. Porttitor ultrices aliquam erat sodales lorem purus cubilia leo morbi nullam, habitasse nibh class sapien pharetra cursus vel per morbi. Tempus faucibus litora facilisis volutpat elit netus auctor per, lacinia rutrum ullamcorper ad lacinia non molestie massa, lorem nam consectetur congue dolor litora sit. Id auctor cras quisque placerat convallis scelerisque taciti, scelerisque viverra fames donec pretium sagittis nullam et, suspendisse litora torquent dictum congue nullam.";
-	$data=array(
-			"first_name"=>"Shrikanth",
-			"last_name"=>"Ananthakrishnan",
-			"title"=>"Software Engineer",
-			"department"=>"PDM",
-			"supervisor"=>"Chris Ryan",
-			"image"=>"ShriAnan.jpg");
-	return View::make('employeeview')->with('paragraph',$paragraph)->with('bView',false)->with('data',$data);
-});
+));
 
 //seeding the database
-Route::get('/seeddb',function(){
+Route::get('/dbseeder',function(){
 
-
+	DB::statement('SET FOREIGN_KEY_CHECKS=0'); # Disable FK constraints so that all rows can be deleted, even if there's an associated FK
+	DB::statement('TRUNCATE employee_expertise');
+	DB::statement('TRUNCATE expertise');
+	DB::statement('TRUNCATE employees');
+	DB::statement('TRUNCATE employee_portals');
+	DB::statement('TRUNCATE groups');
+	DB::statement('TRUNCATE departments');
+	DB::statement('TRUNCATE positions');
+	DB::statement('SET FOREIGN_KEY_CHECKS=1');
+	
+	require 'dbseeder.php';
+	
+	seed_departments();
+	seed_positions();
+	seed_employees();
 
 });
 
+//Debug function to view database connection info
 Route::get('/debug',function()
 {
 	echo '<pre>';

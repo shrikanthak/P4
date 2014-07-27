@@ -11,7 +11,7 @@ class Employee extends Eloquent
 	
 	public function employee_portal()
 	{
-		return $this->hasOne('EmployeePortal','employee_portal_id')
+		return $this->belongsTo('EmployeePortal','employee_portal_id');
 	}
 	
 	public function expertise()
@@ -21,12 +21,17 @@ class Employee extends Eloquent
 
 	public function position()
 	{
-		return $this->hasOne('Position','position_id');
+		return $this->belongsTo('Position','position_id');
 	}
 
 	public function supervisor()
 	{
-		return $this->belongsTo('Supervisor','supervisor_id','id');
+		return $this->belongsTo('Employee','supervisor_id');
+	}
+
+	public function reportee()
+	{
+		return $this->hasMany('Employee','supervisor_id');
 	}
 }
 

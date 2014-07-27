@@ -19,7 +19,7 @@ class CreateEmployeesTable extends Migration {
 			$table->string('first_name');
 			$table->string('last_name');
 			$table->string('login')->unique()->nullable(false);
-			$table->string('password');
+			$table->string('password')->nullable(false);
 			$table->integer('position_id')->unsigned()->nullable();
 			$table->integer('supervisor_id')->unsigned()->nullable();
 			$table->integer('employee_portal_id')->unsigned()->nullable();

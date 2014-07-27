@@ -17,7 +17,7 @@ class CreatePositionsTable extends Migration {
 		{	
 			$table->increments('id');
 			$table->string('title')->nullable(false);
-			$table->integer('group_id')->unsigned();
+			$table->integer('group_id')->unsigned()->nullable(true);
 			$table->boolean('hr_access')->default(false);
 			$table->timestamps();
 

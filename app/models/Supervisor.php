@@ -6,6 +6,6 @@ class Supervisor extends Eloquent
 	
 	public function reportee()
 	{
-		return $this->hasMany('Employee','supervisor_id','id');
+		return $this->hasMany('Employee','supervisor_id');
 	}
 }
