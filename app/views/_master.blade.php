@@ -37,9 +37,8 @@
 						<li><a class="menufont" href="/">Home</a></li>
 						<!-- If user not logged in display log in menu option-->
 						@if(Auth::check())
-						
 							<!--Else display link to employee home page-->		
-							<li><a class="menufont" href="/employee/view">Your Info</a></li>
+							<li><a class="menufont" href="/employee/view/<?=Auth::user()->id?>">Your Info</a></li>
 							
 							<!-- If hr person display menu for HR page-->
 							@if(Session::has('view_hr_tab'))

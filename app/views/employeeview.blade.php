@@ -21,7 +21,7 @@
 					</div>
 			
 					<div class="col-xs-10">
-						@if(Auth::user()->id==$data['current_id'])
+						@if(Auth::check()?Auth::user()->id==$data['current_id']:false)
 							<button type="button" onclick="clickEdit()"class="btn btn-info btn-lg pull-right buttonmargin">Edit Information</button>
 						@endif
 					</div>

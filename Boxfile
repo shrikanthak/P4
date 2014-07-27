@@ -11,7 +11,7 @@ web1:
     - /app/storage/meta
     - /app/storage/sessions
     - /app/storage/views
-    - images
+    - /public/images
   document_root: public
   php_version: 5.4.14
   php_extensions:

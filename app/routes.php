@@ -62,14 +62,13 @@ Route::get('/search', function()
 	});
 
 //Route for employee to view his data
-Route::get('employee/view/{empid?}', array('before' => 'auth',function($empid=-1)
+Route::get('employee/view/{empid}', array('before' => 'auth',function($empid)
 {
-	$findId=(integer)($empid==-1 ? Auth::user()->id : $empid);
-
-	$employee=Employee::with('employee_portal')->with("position")->with("group.department")->find($findId);
+	
+	$employee=Employee::with('employee_portal')->with("position")->with("group.department")->find($$empid);
 
 	$data=array(
-	"current_id"=>$employee->id,
+	"current_id"=>$empid,
 	"first_name"=>$employee->first_name,
 	"last_name"=>$employee->last_name,
 	"title"=>$employee->position->title,
@@ -110,7 +109,7 @@ Route::post('employee/save', array('before' => 'csrf|auth',
 				}
 				elseif (App::environment()=='production')
 				{
-					$filepath='../images';
+					$filepath='public/images';
 				}
 				
 
