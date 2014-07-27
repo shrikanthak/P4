@@ -110,7 +110,7 @@ Route::post('employee/save', array('before' => 'csrf|auth',
 				}
 				elseif (App::environment()=='production')
 				{
-					$filepath='./images';
+					$filepath='shared/images';
 				}
 				
 
