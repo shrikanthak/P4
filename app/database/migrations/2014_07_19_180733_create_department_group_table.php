@@ -22,19 +22,6 @@ class CreateDepartmentGroupTable extends Migration {
 
 		});
 
-		//groups table
-		Schema::create('groups',function($table)
-		{
-			$table->increments('id');
-			$table->string('name');
-			$table->integer('department_id')->unsigned();
-			$table->timestamps();
-
-			//setting up foreign key
-			$table->foreign('department_id')->references('id')->on('departments');
-
-		});
-
 	}
 
 	/**

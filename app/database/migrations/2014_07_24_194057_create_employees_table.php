@@ -23,11 +23,11 @@ class CreateEmployeesTable extends Migration {
 			$table->integer('position_id')->unsigned()->nullable();
 			$table->integer('supervisor_id')->unsigned()->nullable();
 			$table->integer('employee_portal_id')->unsigned()->nullable();
-			$table->integer('group_id')->unsigned()->nullable();
+			$table->integer('department_id')->unsigned()->nullable();
 			$table->timestamps();
 
 			//setting up foreign key
-			$table->foreign('group_id')->references('id')->on('groups');
+			$table->foreign('department_id')->references('id')->on('departments');
 			$table->foreign('supervisor_id')->references('id')->on('employees');
 			$table->foreign('position_id')->references('id')->on('positions');
 			$table->foreign('employee_portal_id')->references('id')->on('employee_portals');

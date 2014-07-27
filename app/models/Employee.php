@@ -4,9 +4,9 @@ class Employee extends Eloquent
 {
 	protected $table = 'employees';
 
-	public function group()
+	public function department()
 	{
-		return $this->belongsTo('Group','group_id');
+		return $this->belongsTo('Department','department_id');
 	}
 	
 	public function employee_portal()

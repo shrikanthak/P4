@@ -123,11 +123,11 @@ Route::post('employee/save', array('before' => 'csrf|auth',
 
 		if ($flash_message!='')
 		{
-			return Redirect::to('employee/view')->with('flash_message',$flash_message);
+			return Redirect::to('employee/view'.Auth::user()->id)->with('flash_message',$flash_message);
 		}
 		else
 		{
-			return Redirect::to('employee/view');
+			return Redirect::to('employee/view'.Auth::user()->id);
 		}
 		
 	}
