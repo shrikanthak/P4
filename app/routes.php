@@ -65,7 +65,7 @@ Route::get('/search', function()
 Route::get('employee/view/{empid}', array('before' => 'auth',function($empid)
 {
 	
-	$employee=Employee::with('employee_portal')->with("position")->with("group.department")->find($$empid);
+	$employee=Employee::with('employee_portal')->with("position")->with("group.department")->find($empid);
 
 	$data=array(
 	"current_id"=>$empid,
