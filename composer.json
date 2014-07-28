@@ -5,7 +5,8 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"barryvdh/laravel-debugbar": "1.6.*@dev"
+		"barryvdh/laravel-debugbar": "1.6.*@dev",
+		"paste/pre": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

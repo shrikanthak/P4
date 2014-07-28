@@ -65,22 +65,34 @@ Route::get('/search', function()
 Route::get('employee/view/{empid}', array('before' => 'auth',function($empid)
 {
 	
-	$employee=Employee::with('employee_portal')->with("position")->with("group.department")->find($empid);
+	$employee=Employee::with('employee_portal')->with("position")->with("department")->find($empid);
 
 	$data=array(
 	"current_id"=>$empid,
 	"first_name"=>$employee->first_name,
 	"last_name"=>$employee->last_name,
 	"title"=>$employee->position->title,
-	"department"=>(!!$employee->group->department)?$employee->group->department->name:'',
-	"group"=>$employee->group->name,
+	"department"=>(!!$employee->department)?$employee->department->name:'',
+	"department_id"=>(!!$employee->department)?$employee->department->id:0,
 	"supervisor"=>(!!$employee->supervisor)?$employee->supervisor->first_name." ".$employee->supervisor->last_name:'',
 	"supervisor_id"=>(!!$employee->supervisor)?$employee->supervisor->id:0,
 	"image"=>$employee->employee_portal->imagefile,
+	"head_of_department"=>$employee->head_of_department,
 	"paragraph"=>$employee->employee_portal->employee_info);
 
 	return View::make('employeeview')->with('data',$data);
 	
+
+}));
+
+require 'OrgChartHelper.php';
+
+Route::get('employee/orgchart/{id}', array('as' => 'emp_org_chart', function($empid)
+{
+
+	
+	$dataArray=OrgChartData((integer)$empid);
+	return View::make('orgchart')->with('dataArray',json_encode($dataArray));
 
 }));
 
@@ -123,11 +135,11 @@ Route::post('employee/save', array('before' => 'csrf|auth',
 
 		if ($flash_message!='')
 		{
-			return Redirect::to('employee/view'.Auth::user()->id)->with('flash_message',$flash_message);
+			return Redirect::to('employee/view/'.Auth::user()->id)->with('flash_message',$flash_message);
 		}
 		else
 		{
-			return Redirect::to('employee/view'.Auth::user()->id);
+			return Redirect::to('employee/view/'.Auth::user()->id);
 		}
 		
 	}
@@ -141,7 +153,6 @@ Route::get('/dbseeder',function(){
 	DB::statement('TRUNCATE expertise');
 	DB::statement('TRUNCATE employees');
 	DB::statement('TRUNCATE employee_portals');
-	DB::statement('TRUNCATE groups');
 	DB::statement('TRUNCATE departments');
 	DB::statement('TRUNCATE positions');
 	DB::statement('SET FOREIGN_KEY_CHECKS=1');

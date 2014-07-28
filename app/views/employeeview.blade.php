@@ -17,12 +17,14 @@
 			
 				<div class="row">
 					<div class="col-xs-2">
-						<button type="button" class="btn btn-success btn-lg pull-left buttonmargin">View Org Chart</button>
+						{{Form::open(array('route'=>array('emp_org_chart',$data['current_id']),'method'=>'GET'))}}
+							<button type="submit" class= "btn btn-success btn-lg pull-left buttonmargin">View Org Chart</button>
+						{{Form::close()}}	
 					</div>
 			
 					<div class="col-xs-10">
 						@if(Auth::check()?Auth::user()->id==$data['current_id']:false)
-							<button type="button" onclick="clickEdit()"class="btn btn-info btn-lg pull-right buttonmargin">Edit Information</button>
+							<button type="button" onclick="clickEdit()" class="btn btn-warning btn-lg pull-right buttonmargin">Edit Information</button>
 						@endif
 					</div>
 				</div>

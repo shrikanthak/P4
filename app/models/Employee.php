@@ -29,10 +29,11 @@ class Employee extends Eloquent
 		return $this->belongsTo('Employee','supervisor_id');
 	}
 
-	public function reportee()
+	public function reportees()
 	{
 		return $this->hasMany('Employee','supervisor_id');
 	}
+
 }
 
 

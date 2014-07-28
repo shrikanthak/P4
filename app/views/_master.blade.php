@@ -85,6 +85,7 @@
 		
 		{{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js');}}
 		{{ HTML::script('js/bootstrap.min.js'); }}
+		
 
 	</body>
 

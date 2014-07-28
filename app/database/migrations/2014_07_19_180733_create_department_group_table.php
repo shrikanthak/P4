@@ -31,9 +31,7 @@ class CreateDepartmentGroupTable extends Migration {
 	 */
 	public function down()
 	{
-		schema::drop('groups');
 		schema::drop('departments');
-		
 	}
 
 }

@@ -5,7 +5,7 @@ function seed_departments()
 	DB::transaction( function()
 	{
 		//Seeding Departments
-		$head=Department::create(array('name' => 'Company Heads'));
+		$head=Department::create(array('name' => 'Company Head'));
 		$finance=Department::create(array('name' => 'Finance & Accounting'));
 		$marketing=Department::create(array('name' => 'Marketing & Sales'));
 		$manufacturing=Department::create(array('name' => 'Manufacturing & Operations'));
@@ -14,60 +14,6 @@ function seed_departments()
 		$it=Department::create(array('name' => 'Information Technology'));
 		$hr=Department::create(array('name' => 'Human Resources'));
 		$cs=Department::create(array('name' => 'Customer Support'));
-
-		//seeding groups finamce
-		$group=new Group;
-		$group->name="Company Head";
-		$group->department()->associate($head);
-		$group->save();
-
-		$group=new Group;
-		$group->name="Audit";
-		$group->department()->associate($finance);
-		$group->save();
-
-		$group=new Group;
-		$group->name="Accounting";
-		$group->department()->associate($finance);
-		$group->save();
-
-		$group=new Group;
-		$group->name="Receivables";
-		$group->department()->associate($finance);
-		$group->save();
-
-		$group=new Group;
-		$group->name="Payments";
-		$group->department()->associate($finance);
-		$group->save();
-
-		
-		//seeding groups marketing
-		$group=new Group;
-		$group->name="Online Marketing";
-		$group->department()->associate($marketing);
-		$group->save();
-
-		$group=new Group;
-		$group->name="Direct Marketing";
-		$group->department()->associate($marketing);
-		$group->save();
-
-		$group=new Group;
-		$group->name="Online Sales";
-		$group->department()->associate($marketing);
-		$group->save();
-
-		$group=new Group;
-		$group->name="Direct Sales";
-		$group->department()->associate($marketing);
-		$group->save();
-
-		$group=new Group;
-		$group->name="HR Management";
-		$group->department()->associate($hr);
-		$group->save();
-
 
 	});
 
@@ -108,8 +54,9 @@ function seed_employees()
 		$portal->save();
 		$employee->employee_portal()->associate($portal);
 
-		$group=Group::where('name','=','Company Head')->get()->first();
-		$employee->group()->associate($group);
+		$department=Department::where('name','=','Company Head')->get()->first();
+		$employee->department()->associate($department);
+		$employee->head_of_department=true;
 
 		$employee->save();
 
@@ -131,9 +78,9 @@ function seed_employees()
 		$portal->save();
 		$employee->employee_portal()->associate($portal);
 
-		$group=Group::where('name','=','HR Management')->get()->first();
-		$employee->group()->associate($group);
-
+		$department=Department::where('name','=','Human Resources')->get()->first();
+		$employee->department()->associate($department);
+		$employee->head_of_department=true;
 		$employee->save();
 
 	});

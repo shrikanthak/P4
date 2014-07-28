@@ -16,7 +16,7 @@ class UpdateEmployeeTable extends Migration {
 		Schema::table('employees',function($table) 
 		{
         	$table->boolean('remember_token');
-
+        	$table->boolean('head_of_department')->default(false);
 		});
 	}
 
@@ -31,6 +31,7 @@ class UpdateEmployeeTable extends Migration {
 		Schema::table('employees', function($table) 
 		{
     		$table->dropColumn('remember_token');
+    		$table->dropColumn('head_of_department');
     	});
 
 	}

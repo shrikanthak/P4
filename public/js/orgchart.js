@@ -1,11 +1,11 @@
-google.load('visualization', '1', {packages:['orgchart']});
+
 //google.setOnLoadCallback(drawChart);
 
-function drawChart() 
+/*function drawChart() 
 {
     //var obj = JSON.parse(stringJSON);
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Name');
+    var data = new google.visualization.DataTable(chartdata);
+    /*data.addColumn('string', 'Name');
     data.addColumn('string', 'Manager');
     data.addColumn('string', 'ToolTip');
     data.addRows([
@@ -18,7 +18,7 @@ function drawChart()
     chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
     chart.draw(data, {allowHtml:true});
     google.visualization.events.addListener(chart,'select',orgChartClick);
-  }
+  }*/
 
   function orgChartClick()
   {
