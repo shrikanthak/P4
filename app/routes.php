@@ -90,7 +90,6 @@ require 'OrgChartHelper.php';
 Route::get('employee/orgchart/{id}', array('as' => 'emp_org_chart', function($empid)
 {
 
-	
 	$dataArray=OrgChartData((integer)$empid);
 	return View::make('orgchart')->with('dataArray',json_encode($dataArray));
 

@@ -9,7 +9,7 @@
 
 	   	{{ HTML::style('css/master.css'); }}
 		{{ HTML::style('css/bootstrap.min.css'); }}
-		{{ HTML::script('js/respond.js'); }}
+		{{HTML::script('js/respond.js');}}
 
     	@yield('headsection')
 

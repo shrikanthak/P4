@@ -7,19 +7,17 @@
 		{{HTML::image('','No Image',array('style'=>'display:none','id'=>'hiddenImage'))}}
 		<div id='chart_div'></div>
 		<script>
-			google.load('visualization', '1', {packages:['orgchart']});
 			var chart;
-			var dataJSON;
 			function drawChart() 
 			{
-	
 				    var data = new google.visualization.DataTable();
 				    data.addColumn('string', 'Name');
 				    data.addColumn('string', 'Manager');
 				    data.addColumn('string', 'ToolTip');
+				    
 				    dataJSON=document.getElementById('divHidden').innerHTML;
 
-				    dataJSON=JSON.parse(dataJSON);
+				    var dataJSON=JSON.parse(dataJSON);
 
 				    var id='id';
 				    var name='name'
@@ -38,11 +36,16 @@
 
 				    for (var i = 0; i < dataJSON.length; i++)
 				    {
-				    	var row=dataJSON[i];
-				    	var str='';
-				    	str=str.concat(row[name],'<div style="color:red; font-style:italic">',
-				    			 '<img style="max-width=75px;max-height:75px;" src="','/images/',
-				    			 row[imagename],'"><br>',row[title],'</div></div>');
+						var row=dataJSON[i];
+						var str='';
+						str=str.concat(row[name],'<div style="color:red; font-style:bold">',row[title])
+						
+						if(row[imagename] !== '')
+						{
+							str=str.concat('<div><img style="max-width=75px;max-height:75px;" src="','/images/',
+							 			row[imagename],'"><br></div>');
+						}
+				    	str=str.concat('</div>');
 
 				    	data.addRow([{v:row[id].toString(), 
 				    		f:str},row[supervisor_id].toString(),row[title]]);	
@@ -60,8 +63,8 @@
 		
 	@section('headsection')
 		{{ HTML::script('https://www.google.com/jsapi'); }}
-		<!--script src='https://www.google.com/jsapi'></script-->
 		{{ HTML::script('js/orgchart.js'); }}
+		<script>google.load('visualization', '1', {packages:['orgchart']});</script>
 	@stop
 
 	
