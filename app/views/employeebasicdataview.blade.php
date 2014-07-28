@@ -20,7 +20,7 @@ $department_id=$data['department_id']!=''?'/department'.'/'.$data['department_id
 				@if($data['head_of_department'])
 					{{{"Head of Department: "}}}
 				@else
-					{{{"Department: "}}}}
+					{{{"Department: "}}}
 				@endif
 				<a href=<?=$department_id?>>{{{$data['department']}}}</a></br>
 			@endif

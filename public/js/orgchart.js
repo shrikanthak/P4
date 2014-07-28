@@ -20,11 +20,4 @@
     google.visualization.events.addListener(chart,'select',orgChartClick);
   }*/
 
-  function orgChartClick()
-  {
-    var selection=chart.getSelection();
-    if (selection.length==1)
-    {
-        var item=selection[0];
-    }
-  }
+ 

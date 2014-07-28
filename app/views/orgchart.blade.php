@@ -53,9 +53,34 @@
 
 				    chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
 				    chart.draw(data, {allowHtml:true});
+
+					function orgChartClick()
+					{
+						var selection=chart.getSelection();
+						var selectedItem = chart.getSelection()[0];
+						if (selection.length==1)
+						{
+							if (selectedItem) 
+							{
+								var value = data.getValue(selectedItem.row, 0);
+								strurl="/employee/orgchart/";
+								strurl=strurl.concat(value.toString());
+								window.location.replace(strurl);
+							}
+						}
+					}
+
+
+				    google.visualization.events.addListener(chart,'select',orgChartClick);
+
+
+
 			}
 
+			
+
 			//console.log(dataJSON);
+
 			drawChart();
 		</script>
 	@stop
@@ -64,6 +89,7 @@
 	@section('headsection')
 		{{ HTML::script('https://www.google.com/jsapi'); }}
 		{{ HTML::script('js/orgchart.js'); }}
+		{{ HTML::style('css/orgchart.css'); }}
 		<script>google.load('visualization', '1', {packages:['orgchart']});</script>
 	@stop
 
