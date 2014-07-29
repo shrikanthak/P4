@@ -4,13 +4,15 @@ $supervisor_id=$data['supervisor_id']>0?"/employee/view/".$data['supervisor_id']
 $department_id=$data['department_id']!=''?'/department'.'/'.$data['department_id']:'';
 ?>
 
-<div class="row">
+
+<div clas="row">
 	<div class="col-xs-6">
 		@if($imagefile!='')
 			{{HTML::image($imagefile,'Your Image',array('class'=>'imageformat'))}}
 		@endif
 		
 	</div>
+
 	<div class="col-xs-6">
 		<h1>{{{$name}}}</h1>
 		<h3>{{{"Title: ".$data['title']}}}<br>
@@ -31,4 +33,13 @@ $department_id=$data['department_id']!=''?'/department'.'/'.$data['department_id
 
 		</h3>
 	</div>
+
 </div>
+
+@if($addEditForm)
+	<div class="row">
+		<div class="col-xs-12">
+			<button type="button" onclick="clickEditEmployee()" class="btn btn-warning btn-lg float-right buttonmargin">Edit Information</button>
+		</div>
+	</div>
+@endif

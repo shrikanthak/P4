@@ -6,6 +6,9 @@
 		<div id='divHidden' style='display:none'>{{$dataArray}}</div>
 		{{HTML::image('','No Image',array('style'=>'display:none','id'=>'hiddenImage'))}}
 		<div id='chart_div'></div>
+
+		{{-- The following script is for generating org chart and trapping evemts --}}
+		
 		<script>
 			var chart;
 			function drawChart() 

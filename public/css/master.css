@@ -29,3 +29,21 @@
 {
 	background-color:yellow;
 }
+
+.imageformat
+{
+	max-width: 200px;
+	max-height: 200px;
+	margin-top: 5px;
+}
+
+.textareaformat
+{
+	margin:5px;
+}
+
+.controlmargin
+{
+	margin-left:10px;
+	margin-right:10px;
+}

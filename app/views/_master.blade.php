@@ -9,7 +9,6 @@
 
 	   	{{ HTML::style('css/master.css'); }}
 		{{ HTML::style('css/bootstrap.min.css'); }}
-		{{HTML::script('js/respond.js');}}
 
     	@yield('headsection')
 
@@ -38,11 +37,11 @@
 						<!-- If user not logged in display log in menu option-->
 						@if(Auth::check())
 							<!--Else display link to employee home page-->		
-							<li><a class="menufont" href="/employee/view/<?=Auth::user()->id?>">Your Info</a></li>
+							<li><a class="menufont" href="/employee/view/<?=Auth::user()->id?>">Your Profile</a></li>
 							
 							<!-- If hr person display menu for HR page-->
-							@if(Session::has('view_hr_tab'))
-								<li><a class="menufont" href="/hr_page">Login</a></li>
+							@if(Auth::user()->hr_access)
+								<li><a class="menufont" href="/hr_access">HR Access</a></li>
 							@endif
 
 							<li><a class="menufont" href="/logout">Log Out</a></li>
@@ -81,12 +80,12 @@
 			@yield('bodycontent')
 
 		</div>
-		@yield('footercontent')
 		
 		{{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js');}}
+		{{ HTML::script('js/respond.min.js'); }}
 		{{ HTML::script('js/bootstrap.min.js'); }}
+		@yield('footercontent')
 		
-
 	</body>
 
 </html>

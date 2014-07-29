@@ -12,3 +12,10 @@
 {
 	margin:0 auto;
 }
+
+.RadioButtonLabels
+{
+	font-family:garamond;
+	font-size: 20px;
+	font-style: bold;
+}

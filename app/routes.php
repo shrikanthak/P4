@@ -13,6 +13,12 @@
 
 //-------------------------------------------
 //All _master page routes
+use Paste\Pre;
+
+require 'helpers/OrgChartHelper.php';
+require 'helpers/EmployeeDataHelper.php';
+require 'helpers/dbseeder.php';
+
 Route::get('/', function()
 	{
 		return View::make('welcome');
@@ -66,26 +72,14 @@ Route::get('employee/view/{empid}', array('before' => 'auth',function($empid)
 {
 	
 	$employee=Employee::with('employee_portal')->with("position")->with("department")->find($empid);
+	$data=GetEmplopyeeData($employee);
 
-	$data=array(
-	"current_id"=>$empid,
-	"first_name"=>$employee->first_name,
-	"last_name"=>$employee->last_name,
-	"title"=>$employee->position->title,
-	"department"=>(!!$employee->department)?$employee->department->name:'',
-	"department_id"=>(!!$employee->department)?$employee->department->id:0,
-	"supervisor"=>(!!$employee->supervisor)?$employee->supervisor->first_name." ".$employee->supervisor->last_name:'',
-	"supervisor_id"=>(!!$employee->supervisor)?$employee->supervisor->id:0,
-	"image"=>$employee->employee_portal->imagefile,
-	"head_of_department"=>$employee->head_of_department,
-	"paragraph"=>$employee->employee_portal->employee_info);
-
-	return View::make('employeeview')->with('data',$data);
+	return View::make('employeeview')->with('data',$data)->with('addEditForm',false);
 	
 
 }));
 
-require 'OrgChartHelper.php';
+
 
 Route::get('employee/orgchart/{id}', array('as' => 'emp_org_chart', function($empid)
 {
@@ -94,6 +88,15 @@ Route::get('employee/orgchart/{id}', array('as' => 'emp_org_chart', function($em
 	return View::make('orgchart')->with('dataArray',json_encode($dataArray));
 
 }));
+
+
+Route::get('/hr_access',function()
+{
+	$loginArray=Employee::lists('login');
+	Pre::render($loginArray,'Employee Logins');
+	return View::make('hr')->with('loginArray',$loginArray)
+					->with('departments',Department::lists('name'));
+});
 
 Route::post('employee/save', array('before' => 'csrf|auth',
 	function()
@@ -156,8 +159,6 @@ Route::get('/dbseeder',function(){
 	DB::statement('TRUNCATE positions');
 	DB::statement('SET FOREIGN_KEY_CHECKS=1');
 	
-	require 'dbseeder.php';
-	
 	seed_departments();
 	seed_positions();
 	seed_employees();
@@ -207,4 +208,16 @@ Route::get('/debug',function()
     }
 
     echo '</pre>';
+});
+
+Route::get('/hr/ajax/employeeview/',function()
+{
+	$loginid=Input::get('search_content');
+	
+	$employee=Employee::with('employee_portal')
+						->with("position")->with("department")
+						->where('login','=',$loginid)
+						->get()->first();
+	$data=GetEmplopyeeData($employee);
+	return View::make('employeebasicdataview')->with('data',$data)->with('addEditForm',true);;
 });

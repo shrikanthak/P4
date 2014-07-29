@@ -11,7 +11,10 @@
 	<h2>Find informtion about your colleagues and the org chart on this page<h2>
 		
 		<ul>
-			<li>Login in onto the web page and select the {{{"Your Portal"}}} link to change your info</li>
+			
+			<li>View profiles of your colleagues</li>
+			<li>View the organization chart of a colleague</li>
+			<li>Login in to change your info viewed by others</li>
 			
 		</ul>
 
