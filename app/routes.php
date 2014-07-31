@@ -15,209 +15,29 @@
 //All _master page routes
 use Paste\Pre;
 
-require 'helpers/OrgChartHelper.php';
-require 'helpers/EmployeeDataHelper.php';
-require 'helpers/dbseeder.php';
 
-Route::get('/', function()
-	{
-		return View::make('welcome');
-	});	
-
-Route::post('/authenticate', array('before' => 'csrf',
-	
-	function() 
-	{
-		$credentials=Input::only('login','password');
-		
-		if (Auth::attempt($credentials,$remember=false)) 
-		{
-		    return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
-		}
-		else 
-		{
-		    return Redirect::to('/login')->with('flash_message', 'Log in failed; please try again.');
-		}
-
-		return Redirect::to('login');
-	}
-  ));
-
-
-//This function is called to make login
-Route::get('/login',function()
-	{
-		return View::make('login');
-
-	});
-
-//This function is called to make login
-Route::get('/logout',function()
-	{
-		Auth::logout();
-		return View::make('welcome');
-
-	});
-
-//Route for searhing based on search string input by the user
-Route::get('/search', function()
-	{
-		$inputString=Input::get('txtSearch');
-		echo $inputString;
-		return View::make('orgchart');
-	});
-
+//employee routes
 //Route for employee to view his data
-Route::get('employee/view/{empid}', array('before' => 'auth',function($empid)
-{
-	
-	$employee=Employee::with('employee_portal')->with("position")->with("department")->find($empid);
-	$data=GetEmplopyeeData($employee);
+Route::get('employee/view/{empid}','EmployeeViewController@viewEmployee');
+Route::get('employee/orgchart/{id}', array('as'=>'emp_org_chart', 'uses'=>'EmployeeViewController@viewOrgChart'));
+Route::get('/search', 'EmployeeViewController@search');
+Route::get('/employeebasicview','EmployeeViewController@showEmployeeBasicView');
+Route::post('employee/save', ['before'=>'csrf', 'uses'=>'EmployeeViewController@saveEmployeePortal']);
 
-	return View::make('employeeview')->with('data',$data)->with('addEditForm',false);
-	
-
-}));
-
-
-
-Route::get('employee/orgchart/{id}', array('as' => 'emp_org_chart', function($empid)
-{
-
-	$dataArray=OrgChartData((integer)$empid);
-	return View::make('orgchart')->with('dataArray',json_encode($dataArray));
-
-}));
+//All Authentication Controllers
+Route::get('/','AuthenticationController@showWelcome');	
+Route::post('/authenticate', ['before'=>'csrf', 'uses'=>'AuthenticationController@authenticate']);
+Route::get('/login','AuthenticationController@showLogin');
+Route::get('/logout','AuthenticationController@logOut');
 
 
-Route::get('/hr_access',function()
-{
-	$loginArray=Employee::lists('login');
-	Pre::render($loginArray,'Employee Logins');
-	return View::make('hr')->with('loginArray',$loginArray)
-					->with('departments',Department::lists('name'));
-});
+//
+Route::get('/hr_access',['before'=>'HRAuthentication','uses'=>'HRController@hrAccess']);
+Route::get('/positions/employees','HRController@getPositionsEmployees');
 
-Route::post('employee/save', array('before' => 'csrf|auth',
-	function()
-	{
-		$employee=Employee::with('employee_portal')->find(Auth::user()->id);
-
-		if(Input::has('employee_info'))
-		{	
-			$employee->employee_portal->employee_info=Input::get('employee_info');
-		}
-		$flash_message='';
-
-		if(Input::hasFile('fileImageInput'))
-		{
-			if (getimagesize(Input::file('fileImageInput')->getRealPath()))
-			{
-				$filename=$employee->employee_portal->imagefile;
-
-				$name=uniqid().".".Input::file('fileImageInput')->guessExtension();
-				
-				$filepath='./images';
-
-				if ($filename!=''? file_exists ($filepath.'/'.$filename) : false)
-				{
-					unlink ($filepath.'/'.$filename); 	
-				}
-				Input::file('fileImageInput')->move($filepath, $name);
-
-				$employee->employee_portal->imagefile=$name;
-			}
-			else
-			{
-				$flash_message="File uploaded is not an image file";
-			}
-		}
-		
-		$employee->push();
-
-		if ($flash_message!='')
-		{
-			return Redirect::to('employee/view/'.Auth::user()->id)->with('flash_message',$flash_message);
-		}
-		else
-		{
-			return Redirect::to('employee/view/'.Auth::user()->id);
-		}
-		
-	}
-));
 
 //seeding the database
-Route::get('/dbseeder',function(){
-
-	DB::statement('SET FOREIGN_KEY_CHECKS=0'); # Disable FK constraints so that all rows can be deleted, even if there's an associated FK
-	DB::statement('TRUNCATE employee_expertise');
-	DB::statement('TRUNCATE expertise');
-	DB::statement('TRUNCATE employees');
-	DB::statement('TRUNCATE employee_portals');
-	DB::statement('TRUNCATE departments');
-	DB::statement('TRUNCATE positions');
-	DB::statement('SET FOREIGN_KEY_CHECKS=1');
-	
-	seed_departments();
-	seed_positions();
-	seed_employees();
-
-});
-
+Route::get('/dbseeder','DebugController@dbseeder');
 //Debug function to view database connection info
-Route::get('/debug',function()
-{
-	echo '<pre>';
-
-    echo '<h1>environment.php</h1>';
-    $path   = base_path().'/environment.php';
-
-    try {
-        $contents = 'Contents: '.File::getRequire($path);
-        $exists = 'Yes';
-    }
-    catch (Exception $e) {
-        $exists = 'No. Defaulting to `production`';
-        $contents = '';
-    }
-
-    echo "Checking for: ".$path.'<br>';
-    echo 'Exists: '.$exists.'<br>';
-    echo $contents;
-    echo '<br>';
-
-    echo '<h1>Environment</h1>';
-    echo App::environment().'</h1>';
-
-    echo '<h1>Debugging?</h1>';
-    if(Config::get('app.debug')) echo "Yes"; else echo "No";
-
-    echo '<h1>Database Config</h1>';
-    print_r(Config::get('database.connections.mysql'));
-
-    echo '<h1>Test Database Connection</h1>';
-    try {
-        $results = DB::select('SHOW DATABASES;');
-        echo '<strong style="background-color:green; padding:5px;">Connection confirmed</strong>';
-        echo "<br><br>Your Databases:<br><br>";
-        print_r($results);
-    } 
-    catch (Exception $e) {
-        echo '<strong style="background-color:crimson; padding:5px;">Caught exception: ', $e->getMessage(), "</strong>\n";
-    }
-
-    echo '</pre>';
-});
-
-Route::get('/hr/ajax/employeeview/',function()
-{
-	$loginid=Input::get('search_content');
-	
-	$employee=Employee::with('employee_portal')
-						->with("position")->with("department")
-						->where('login','=',$loginid)
-						->get()->first();
-	$data=GetEmplopyeeData($employee);
-	return View::make('employeebasicdataview')->with('data',$data)->with('addEditForm',true);;
-});
+Route::get('/testdatabase','DebugController@testdatabase');
+Route::get('/test','DebugController@test');

@@ -4,10 +4,6 @@ class Employee extends Eloquent
 {
 	protected $table = 'employees';
 
-	public function department()
-	{
-		return $this->belongsTo('Department','department_id');
-	}
 	
 	public function employee_portal()
 	{

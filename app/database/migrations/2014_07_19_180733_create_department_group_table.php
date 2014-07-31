@@ -17,7 +17,8 @@ class CreateDepartmentGroupTable extends Migration {
 		Schema::create('departments',function($table)
 		{
 			$table->increments('id');
-			$table->string('name');
+			$table->string('name')->nullable(false);
+			$table->string('code')->nullable(false)->unique();
 			$table->timestamps();
 
 		});

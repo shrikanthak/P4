@@ -16,12 +16,12 @@
 	
 	<body>
 
+		@if(Session::get('flash_message'))
+			<div class='flash-message'>{{ Session::get('flash_message') }}</div>
+		@endif
+
 		<div class="container masteroutline">
 
-			@if(Session::get('flash_message'))
-				<div class='flash-message'>{{ Session::get('flash_message') }}</div>
-			@endif
-			
 			<!--Login Section on the top-->
 			<div class="row headercolor">
 				
@@ -40,7 +40,7 @@
 							<li><a class="menufont" href="/employee/view/<?=Auth::user()->id?>">Your Profile</a></li>
 							
 							<!-- If hr person display menu for HR page-->
-							@if(Auth::user()->hr_access)
+							@if(Auth::user()->hr_access())
 								<li><a class="menufont" href="/hr_access">HR Access</a></li>
 							@endif
 

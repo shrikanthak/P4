@@ -17,10 +17,12 @@ class CreatePositionsTable extends Migration {
 		{	
 			$table->increments('id');
 			$table->string('title')->nullable(false);
-			$table->integer('group_id')->unsigned()->nullable(true);
 			$table->boolean('hr_access')->default(false);
+			$table->boolean('open')->default(true);
+			$table->integer('department_id')->unsigned()->nullable(false);
 			$table->timestamps();
 
+			$table->foreign('department_id')->references('id')->on('departments');
 		});
 	}
 
