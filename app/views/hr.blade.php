@@ -2,7 +2,6 @@
 
 @section('headsection')
 	{{HTML::style('css/hr.css')}}
-	{{HTML::style('css/employeeview.css')}}
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
   	<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 	<script>
@@ -33,5 +32,5 @@
 @stop
 
 @section('footercontent')
-	{{HTML::script('js/hr.js')}}
+	{{HTML::script('js/hr_employee.js')}}
 @stop

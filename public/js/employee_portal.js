@@ -9,3 +9,8 @@ function clickCancel()
 	document.getElementById("divEditInfo").style.display = 'none';
 	document.getElementById("divViewInfo").style.display = 'block';
 }
+
+function orgChartClick(id)
+{
+	window.location.replace('/employee/orgchart/'+id);
+}

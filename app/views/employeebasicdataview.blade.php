@@ -6,6 +6,7 @@ $department_id=$data['department_id']!=''?'/department'.'/'.$data['department_id
 
 
 <div clas="row">
+	
 	<div class="col-xs-6">
 		@if($imagefile!='')
 			{{HTML::image($imagefile,'Your Image',array('class'=>'imageformat'))}}
@@ -33,13 +34,30 @@ $department_id=$data['department_id']!=''?'/department'.'/'.$data['department_id
 
 		</h3>
 	</div>
-
 </div>
 
 @if($addEditForm)
 	<div class="row">
 		<div class="col-xs-12">
-			<button type="button" onclick="clickEditEmployee()" class="btn btn-warning btn-lg float-right buttonmargin">Edit Information</button>
+			<button type="button", id="edit_employee_button" class="btn btn-warning btn-lg float-right buttonmargin">Edit Employee</button>
 		</div>
 	</div>
+	{{-- Hidden Data for Edit Form --}}
+	<div style="display:none">
+		<div id="_login">{{{$data['login']}}}
+		</div>
+		<div id="_first_name">{{{$data['first_name']}}}
+		</div>
+		<div id="_last_name">{{{$data['last_name']}}}
+		</div>
+		<div id="_department_id">{{{$data['department_id']}}}
+		</div>
+		<div id="_position_id">{{{$data['position_id']}}}
+		</div>
+		<div id="_supervisor_id">{{{$data['supervisor_id']}}}
+		</div>
+		<div id="_emp_id">{{{$data['current_id']}}}
+		</div>
+	</div>
+
 @endif

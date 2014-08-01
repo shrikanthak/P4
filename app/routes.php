@@ -19,10 +19,10 @@ use Paste\Pre;
 //employee routes
 //Route for employee to view his data
 Route::get('employee/view/{empid}','EmployeeViewController@viewEmployee');
-Route::get('employee/orgchart/{id}', array('as'=>'emp_org_chart', 'uses'=>'EmployeeViewController@viewOrgChart'));
-Route::get('/search', 'EmployeeViewController@search');
-Route::get('/employeebasicview','EmployeeViewController@showEmployeeBasicView');
-Route::post('employee/save', ['before'=>'csrf', 'uses'=>'EmployeeViewController@saveEmployeePortal']);
+Route::get('employee/orgchart/{empid}','EmployeeViewController@viewOrgChart');
+Route::get('/search/{input}', 'EmployeeViewController@search');
+Route::get('/employeebasicview/{login?}',['as'=>'basicviewroute','uses'=>'EmployeeViewController@showEmployeeBasicView']);
+Route::post('/employeeportal/save', 'EmployeeViewController@saveEmployeePortal');
 
 //All Authentication Controllers
 Route::get('/','AuthenticationController@showWelcome');	
@@ -31,9 +31,10 @@ Route::get('/login','AuthenticationController@showLogin');
 Route::get('/logout','AuthenticationController@logOut');
 
 
-//
-Route::get('/hr_access',['before'=>'HRAuthentication','uses'=>'HRController@hrAccess']);
+//HR Controllers
+Route::get('/hr_access','HRController@hraccess');
 Route::get('/positions/employees','HRController@getPositionsEmployees');
+Route::post('hr/employee/save/{empid}', ['before'=>'csrf|hraccess', 'uses'=>'HRController@saveEmployee']);
 
 
 //seeding the database

@@ -26,7 +26,7 @@ class EmployeeViewController extends BaseController {
 	public function viewEmployee($empid)
 	{
 		$employee=Employee::with('employee_portal')->with("position.department")->find($empid);
-		$data=$this->GetEmplopyeeData($employee);
+		$data=$employee->get_data();
 
 		return View::make('employeeview')->with('data',$data)->with('addEditForm',false);
 	}
@@ -36,22 +36,7 @@ class EmployeeViewController extends BaseController {
 		return View::make('orgchart')->with('dataArray',json_encode($dataArray));
 	}
 
-	private function GetEmplopyeeData($employee)
-	{
-		$data=array("current_id"=>$employee->id,
-		"first_name"=>$employee->first_name,
-		"last_name"=>$employee->last_name,
-		"title"=>$employee->position->title,
-		"department"=>(!!$employee->position->department)?$employee->position->department->name:'',
-		"department_id"=>(!!$employee->position->department)?$employee->position->department->id:0,
-		"supervisor"=>(!!$employee->supervisor)?$employee->supervisor->first_name." ".$employee->supervisor->last_name:'',
-		"supervisor_id"=>(!!$employee->supervisor)?$employee->supervisor->id:0,
-		"image"=>$employee->employee_portal->imagefile,
-		"head_of_department"=>$employee->head_of_department,
-		"paragraph"=>$employee->employee_portal->employee_info);
-
-		return $data;
-	}
+	
 
 	private function OrgChartData($id)
 	{
@@ -80,7 +65,7 @@ class EmployeeViewController extends BaseController {
 						->with('reportees')
 						->find($id);
 
-			addSelf_Reportees($employee, $rowArray);
+			$this->addSelf_Reportees($employee, $rowArray);
 		}
 		
 		
@@ -160,21 +145,33 @@ class EmployeeViewController extends BaseController {
 		
 	}
 
-	public function search()
+	public function search($input)
 	{
-		$inputString=Input::get('search');
-		echo $inputString;
+		$inputString=$input;
+		
+		//Search for Departments
+		$departments=Department::where('name','like','%'.$inputString.'%')->get();
+
+		$employees=Employee::with('employee_portal')->with('position.department')
+							->where('first_name','like','%'.$inputString.'%')
+							->orWhere('last_name','like','%'.$inputString.'%')
+							->orWhere('login','like','%'.$inputString.'%')->get();
+
+		return View::make('searchresults')->with('employees',$employees)
+					->with('departments',$departments);
+
 	}
 
-	public function showEmployeeBasicView()
+	public function showEmployeeBasicView($login="hello")
 	{
-		$loginid=Input::get('search_content');
+		$loginid=($login=="")?Input::get('search_content'):$login;
 		
 		$employee=Employee::with('employee_portal')
 							->with("position.department")
 							->where('login','=',$loginid)
 							->get()->first();
-		$data=$this->GetEmplopyeeData($employee);
-		return View::make('employeebasicdataview')->with('data',$data)->with('addEditForm',true);;
+
+		$data=$employee->get_data();
+		return View::make('employeebasicdataview')->with('data',$data)->with('addEditForm',true);
 	}
 }

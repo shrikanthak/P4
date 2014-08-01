@@ -54,17 +54,16 @@ Route::filter('auth.basic', function()
 	return Auth::basic();
 });
 
-Route::filter('HRAccess', function()
+
+//HR Page Access Filter
+Route::filter('hraccess', function()
 {
-	if (Auth::check()? Auth::hr_access():false)
-	{
-		return;
-	}
-	else
+	if ((Auth::check() ? Auth::user()->hr_access() : false)==false)
 	{
 		return Redirect::to('/')->with('flash_message',"Unauthorized HR Access");
 	}
 });
+
 /*
 |--------------------------------------------------------------------------
 | Guest Filter

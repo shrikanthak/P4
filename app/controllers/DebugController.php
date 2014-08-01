@@ -103,7 +103,7 @@ class DebugController extends BaseController
 			$position=new Position();
 			$position->title="HR Manager";
 			$position->hr_access=true;
-			$position->open=false;
+			$position->open=true;
 			$department=Department::where('code','=','HR')->get()->first();
 			$position->department()->associate($department);
 			$position->save();
@@ -111,7 +111,7 @@ class DebugController extends BaseController
 			$position=new Position();
 			$position->title="Recruitment Manager";
 			$position->hr_access=true;
-			$position->open=false;
+			$position->open=true;
 			$department=Department::where('code','=','HR')->get()->first();
 			$position->department()->associate($department);
 			$position->save();
@@ -119,7 +119,7 @@ class DebugController extends BaseController
 			$position=new Position();
 			$position->title="Chief Financial Officer";
 			$position->hr_access=false;
-			$position->open=false;
+			$position->open=true;
 			$department=Department::where('code','=','FIN')->get()->first();
 			$position->department()->associate($department);
 			$position->save();
@@ -127,7 +127,7 @@ class DebugController extends BaseController
 			$position=new Position();
 			$position->title="Operations Manager";
 			$position->hr_access=false;
-			$position->open=false;
+			$position->open=true;
 			$department=Department::where('code','=','MNO')->get()->first();
 			$position->department()->associate($department);
 			$position->save();
@@ -135,7 +135,7 @@ class DebugController extends BaseController
 			$position=new Position();
 			$position->title="HR Officer Recruitment";
 			$position->hr_access=false;
-			$position->open=false;
+			$position->open=true;
 			$department=Department::where('code','=','HR')->get()->first();
 			$position->department()->associate($department);
 			$position->save();
@@ -143,7 +143,7 @@ class DebugController extends BaseController
 			$position=new Position();
 			$position->title="Auditor";
 			$position->hr_access=false;
-			$position->open=false;
+			$position->open=true;
 			$department=Department::where('code','=','FIN')->get()->first();
 			$position->department()->associate($department);
 			$position->save();
@@ -179,99 +179,7 @@ class DebugController extends BaseController
 
 
 
-			$employee=new Employee();
-			$employee->first_name="John";
-			$employee->last_name="Doe";
-			$employee->login="jdoe";
-			$employee->password=Hash::make('halwa');
-			$position=Position::where('title','=','HR Manager')->get()->first();
-			$employee->position()->associate($position);
-			$portal=new EmployeePortal();
-			$portal->save();
-			$employee->employee_portal()->associate($portal);
-			$positionBoss=Position::where('title','=','Company President')->get()->first();
-			$employee->supervisor()->associate($positionBoss->employee);
-			$employee->head_of_department=true;
-			$employee->save();
-
-
-			$employee=new Employee();
-			$employee->first_name="Jenny";
-			$employee->last_name="Dane";
-			$employee->login="jdane";
-			$employee->password=Hash::make('halwa');
-			$position=Position::where('title','=','Recruitment Manager')->get()->first();
-			$employee->position()->associate($position);
-			$portal=new EmployeePortal();
-			$portal->save();
-			$employee->employee_portal()->associate($portal);
-			$positionBoss=Position::where('title','=','HR Manager')->get()->first();
-			$employee->supervisor()->associate($positionBoss->employee);
-			$employee->head_of_department=false;
-			$employee->save();
-
-
-			$employee=new Employee();
-			$employee->first_name="Happy";
-			$employee->last_name="Honey";
-			$employee->login="hhoney";
-			$employee->password=Hash::make('halwa');
-			$position=Position::where('title','=','HR Officer Recruitment')->get()->first();
-			$employee->position()->associate($position);
-			$portal=new EmployeePortal();
-			$portal->save();
-			$employee->employee_portal()->associate($portal);
-			$positionBoss=Position::where('title','=','Recruitment Manager')->get()->first();
-			$employee->supervisor()->associate($positionBoss->employee);
-			$employee->head_of_department=false;
-			$employee->save();
-
-
-			$employee=new Employee();
-			$employee->first_name="Billy";
-			$employee->last_name="Boy";
-			$employee->login="bboy";
-			$employee->password=Hash::make('halwa');
-			$position=Position::where('title','=','Operations Manager')->get()->first();
-			$employee->position()->associate($position);
-			$portal=new EmployeePortal();
-			$portal->save();
-			$employee->employee_portal()->associate($portal);
-			$positionBoss=Position::where('title','=','Company President')->get()->first();
-			$employee->supervisor()->associate($positionBoss->employee);
-			$employee->head_of_department=true;
-			$employee->save();
-
-
-			$employee=new Employee();
-			$employee->first_name="Free";
-			$employee->last_name="Willy";
-			$employee->login="fwilly";
-			$employee->password=Hash::make('halwa');
-			$position=Position::where('title','=','Chief Financial Officer')->get()->first();
-			$employee->position()->associate($position);
-			$portal=new EmployeePortal();
-			$portal->save();
-			$employee->employee_portal()->associate($portal);
-			$positionBoss=Position::where('title','=','Company President')->get()->first();
-			$employee->supervisor()->associate($positionBoss->employee);
-			$employee->head_of_department=true;
-			$employee->save();
-
-			$employee=new Employee();
-			$employee->first_name="Freddy";
-			$employee->last_name="Teddy";
-			$employee->login="fteddy";
-			$employee->password=Hash::make('halwa');
-			$position=Position::where('title','=','Auditor')->get()->first();
-			$employee->position()->associate($position);
-			$portal=new EmployeePortal();
-			$portal->save();
-			$employee->employee_portal()->associate($portal);
-			$positionBoss=Position::where('title','=','Chief Financial Officer')->get()->first();
-			$employee->supervisor()->associate($positionBoss->employee);
-			$employee->head_of_department=true;
-			$employee->save();
+			
 
 		});
 	}

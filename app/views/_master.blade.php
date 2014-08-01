@@ -63,17 +63,16 @@
 			
 			<!--Navigation bar section form-->
 			<div class="row navbarcolor">
-				{{Form::open(array('url'=>'/search','method'=>'GET'))}}
-				<!--form method='POST' action='/search'-->
+				
+				<!--submit search via jquery-->
 					<div class="col-xs-8"></div>
 					<div class="col-xs-3">	
-						<input type="text" name="txtSearch" class="form-control searchform" placeholder="Name, Login ID or Department">
+						<input type="text" name="search" id='search' class="form-control searchform" placeholder="Name, Login ID or Department">
 					</div>
 					<div class="col-xs-1">
-						<input type="submit" name="btnSubmitSearch" class="btn btn-info searchform" value="Search">
+						<input type="button" name="submit_search" class="btn btn-info searchform" value="Search" id="submit_search">
 					</div>
-				{{Form::close()}}
-				<!--/form-->
+				
 			</div>
 			
 			<!--CUstom content different for each page-->
@@ -83,6 +82,7 @@
 		
 		{{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js');}}
 		{{ HTML::script('js/respond.min.js'); }}
+		{{ HTML::script('js/master.js'); }}
 		{{ HTML::script('js/bootstrap.min.js'); }}
 		@yield('footercontent')
 		

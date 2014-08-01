@@ -14,9 +14,8 @@
 		</blockquote>
 		
 		<div class="col-xs-2">
-			{{Form::open(array('route'=>array('emp_org_chart',$data['current_id']),'method'=>'GET'))}}
-				<button type="submit" class= "btn btn-success btn-lg pull-left">View Org Chart</button>
-			{{Form::close()}}	
+			{{Form::button('View Org Chart',array('class'=>'btn btn-success btn-lg pull-left','onclick'=>'orgChartClick('.$data['current_id'].')'))}}
+			<!--button type="button" onclick='employee/orgchart/' class= "btn btn-success btn-lg pull-left">View Org Chart</button-->	
 		</div>
 
 		<div class="col-xs-10">
@@ -31,7 +30,7 @@
 		
 		<div class='col-xs-12'>	
 			
-			{{Form::open(array('url'=>'/employee/save','method'=>'POST','files'=>true))}} 
+			{{Form::open(array('url'=>'/employeeportal/save','method'=>'POST','files'=>true))}} 
 		      	<h2> Edit Your Information</h2><br>
 				
 				<div class='form-group'>
