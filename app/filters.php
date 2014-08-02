@@ -56,7 +56,7 @@ Route::filter('auth.basic', function()
 
 
 //HR Page Access Filter
-Route::filter('hraccess', function()
+Route::filter('hrfilter', function()
 {
 	if ((Auth::check() ? Auth::user()->hr_access() : false)==false)
 	{

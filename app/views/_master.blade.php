@@ -41,7 +41,7 @@
 							
 							<!-- If hr person display menu for HR page-->
 							@if(Auth::user()->hr_access())
-								<li><a class="menufont" href="/hr_access">HR Access</a></li>
+								<li><a class="menufont" href="/hrpage">HR Access</a></li>
 							@endif
 
 							<li><a class="menufont" href="/logout">Log Out</a></li>

@@ -31,11 +31,13 @@
 <!-- This data is filled in by ajax request-->
 <div id="divError" class="container">
 
+
 </div>
 
 <!-- *******************Employee Error Data*************************** -->
 <!-- This data is filled in by ajax request-->
 <div id="divViewEmployee" class="container">
+	
 </div>
 
 <!-- *******************Employee Data Edit Form*************************** -->
@@ -64,21 +66,17 @@
 		
 		<div class="row formmargin">
 			
-			<div class="col-xs-3">
+			<div class="col-xs-4">
 				{{Form::label('employee_department','Department')}}
 				{{Form::select('employee_department',$departments, null ,
 				array('class'=>'form-control'))}}
 			</div>
 			
-			<div class="col-xs-5">
+			<div class="col-xs-8">
 				{{Form::label('employee_position','Position')}}
 				{{Form::select('employee_position',array(' '),null,array('class'=>'form-control'))}}
 			</div>
 
-			<div class="col-xs-4">
-				{{Form::label('employee_supervisor','Supervisor')}}
-				{{Form::select('employee_supervisor',array(' '),null,array('class'=>'form-control'))}}
-			</div>
 			<input name="_employee_id" type="hidden" value="0" id='_employee_id'></input>
 
 		</div>

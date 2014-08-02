@@ -174,7 +174,6 @@ class DebugController extends BaseController
 			$portal=new EmployeePortal();
 			$portal->save();
 			$employee->employee_portal()->associate($portal);
-			$employee->head_of_department=true;
 			$employee->save();
 
 

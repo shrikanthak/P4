@@ -31,7 +31,20 @@ function itemNewCurrent(state)
         document.getElementById('_employee_id').value=0;
         $("#currentEmployee").attr("disabled",true);
         $("#newEmployee").attr("disabled",true);
-         clearEditForm();
+        if (document.getElementById("newEmployee").checked)
+        {
+          clearEditForm();
+        }
+         
+    }
+}
+
+function setSelectedValue(selectObj, valueToSet) {
+    for (var i = 0; i < selectObj.options.length; i++) {
+        if (selectObj.options[i].value== valueToSet) {
+            selectObj.options[i].selected = true;
+            return;
+        }
     }
 }
 
@@ -59,61 +72,32 @@ function departmentChange()
   $.ajax(
   {
      type: "GET",
-     url: "/positions/employees/". $("#_employee_id").val(),
-     data: {departmentid:$("#employee_department").val()}, // serializes the form's elements.
+     async:false,
+     url: "/openpositions/"+$("#employee_department").val()+'/'+$("#_employee_id").val(),
      success: function(data)
      {
-          //alert(data);
-          var datArray=JSON.parse(data);
-          var positions=datArray['positions'];
-          var employees=datArray['employees'];
-          var options = '';
+          var positions=JSON.parse(data);
+          var options='';
           for (var i = 0; i < positions.length; i++) 
           {
-              array=positions[i];
-
-              options += '<option value="' + array['id'] + '">' + array['description'] + '</option>';
+              options += '<option value="' + positions[i]['id'] + '">' + positions[i]['description'] + '</option>';
           }
           $("select#employee_position").html(options);
-          var options2 = '';
-          for (var i = 0; i < employees.length; i++) 
-          {
-              array=employees[i];
 
-              options2 += '<option value="' + array['id'] + '">' + array['description'] + '</option>';
-          }
-          $("select#employee_supervisor").html(options2);
-          $('#select#employee_department').val(0);
-          $('#select#employee_department').val(1);
      }
   });
 }
 
 function clearEditForm()
 {
-    $("label#Login_id").val("Login ID: ");
-    $("text#first_name").val("");
-    $("text#last_name").val("");
+    $("#Login_id").val("Login ID: ");
+    $("#first_name").val("");
+    $("#last_name").val("");
 }
 
 $( document ).ready(function()
 {    
   
-  $("#edit_employee_button").click(function()
-  {
-     itemNewCurrent("new");
-
-     $("label#Login_id").val("Login ID: "+$("#_login").val());
-     $("text#first_name").val($("#_first_name").val());
-     $("text#last_name").val($("#_last_name").val());
-     $("#_employee_id").val($("#_emp_id").val());
-     $("select#employee_department").val($("#_department_id").val());
-     $("select#employee_position").val($("#_position_id").val());
-     $("select#employee_supervisor").val($("#_supervisor_id").val());
-
-  });
-
-
   $("select#employee_department").change(departmentChange)
 
   $("#cancel").click(function()
@@ -121,7 +105,7 @@ $( document ).ready(function()
     clearEditForm();
     $("#divEditEmployee").css("display","none");
     
-    if ($("#currentEmployee").checked)
+    if ($("#currentEmployee").val()==1)
     {
       $("#divViewEmployee").css("display","block");
       $("#divSearchEmployee").css("display","block");
@@ -141,7 +125,7 @@ $( document ).ready(function()
       $.ajax(
       {
         type: "POST",
-        url: "/employee/save",
+        url: "hr/employee/save/"+$("#_employee_id").val(),
         data: postdata, // serializes the form's elements.
         success: function(data)
         {
@@ -174,7 +158,24 @@ $( document ).ready(function()
            data: {search_content:$("#search_employee").val()}, // serializes the form's elements.
            success: function(data)
            {
-               $('#divViewEmployee').html(data);
+             $('#divViewEmployee').html(data);
+             $("#Login_id").val("Login ID: "+$(data).find('#_login').text());
+             $("#first_name").val($(data).find('#_first_name').text());
+             $("#last_name").val($(data).find('#_last_name').text());
+             $("input#_employee_id").val($(data).find('#_emp_id').text());
+             $('select[name="employee_department"]').find('option[value="'+$(data).find('#_department_id').text()+'"]').attr("selected",true);
+             //$("#employee_department").val(value);
+             departmentChange();
+             //value=$(data).find('#_position_id').text();
+             //setSelectedValue(document.getElementByID("#employee_position"),$(data).find('#_position_id').text());
+             $('select[name="employee_position"]').find('option[value="'+$(data).find('#_position_id').text()+'"]').attr("selected",true);
+             //$("#employee_position").val(value);
+             $("#edit_employee_button").bind('click',function()
+                {
+                   itemNewCurrent("new");
+                  
+
+                });
            }
         });
 

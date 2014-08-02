@@ -4,10 +4,10 @@
 
 @section('bodycontent')
 
-	<?php foreach($employees as $employee)
+	<?php foreach($employee_ids as $id)
 			{
 
-				$data=$employee->get_data();
+				$data=Employee::GetAllEmployeeData($empid)->get_data_array();
 				echo'<div class="panel panel-default">';
 					echo'<div class="panel-body">';
 						echo View::make('employeebasicdataview')

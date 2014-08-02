@@ -1,8 +1,7 @@
 <?php
 
-use Paste\Pre;
-
-class HRController extends BaseController {
+class HRController extends BaseController 
+{
 
 	/*
 	|--------------------------------------------------------------------------
@@ -17,86 +16,41 @@ class HRController extends BaseController {
 	|
 	*/
 
-	public function __construct() {
+	public function __construct() 
+	{
 
 		# Make sure BaseController construct gets called
 		parent::__construct();		
 
 	}
 
-//route for HR Access Page
-	public function hraccess()
-	{
-		return "in HR Access Page";
-		dd();
-		$loginArray=Employee::lists('login');
-			Pre::render($loginArray,'Employee Logins');
-			return View::make('hr')->with('loginArray',$loginArray)
-				->with('departments',Department::getIdNamePair());
-	}
 
 	public function getPositionsTable()
 	{
 		$loginid=Input::get('search_content');
 	}
 
-	public function getPositionsEmployees($empid)
+	public function getOpenPositions($depid,$empid=0)
 	{
-		$departmentid=(integer)Input::get('departmentid');
-
-
-		if($departmentid==0)
-		{
-			return;
-		}
-		
-		
-		$positions=Position::with('department')
-		->where('department_id','=',$departmentid)
+		$positions=Position::where('department_id','=',$depid)
 		->where('open','=',true)->get();
 
 		$posarray=array();
 		$posarray=array(array('id'=>0,'description'=>'------------None---------------'));
-
-		foreach($positions as $position)
-		{
-			$posarray[]=array('id'=>$position->id,'description'=>$position->department->code.'-'.$position->title);
-		}
-
-		$department=Department::with('employees')->find($departmentid);
-		
-		$employees=$department->employees->all();
 		if ($empid>0)
 		{
-			$emp=$employees->fetch($empid);
-			removeReportees($emp, $employees);
-			$employees->forget($empid);
+			$employee=Employee::with('position.department')->find($empid);
+			$posarray[]=array('id'=>$employee->position->id,'description'=>$employee->position->department->code.'-'.$employee->position->title.": ".$employee->position->title);
+
 		}
-		
-	
-		$emparray=array(array('id'=>0,'description'=>'------------None---------------'));
-		
-		foreach($employees as $employee)
+		foreach($positions as $position)
 		{
-			$emparray[]=array('id'=>$employee->id,'description'=>$employee->first_name." ".
-			$employee->last_name." (".$employee->login.")");
+			$posarray[]=array('id'=>$position->id,'description'=>$position->department->code.'-'.$position->title.": ".$position->title);
 		}
 		
-		$data=array('positions'=>$posarray,'employees'=>$emparray);
-		
-		return json_encode($data);
+		return json_encode($posarray);
 	}
 
-	private function removeReportees($emp, &$empCollection)
-	{
-		$reportees=$emp->reportees()->all();
-
-		foreach ($reportee as $reportees)
-		{
-			removeReportees($emp, &$empCollection);
-			$employees->forget($reportee->id);
-		}
-	}
 
 	public function saveEmployee()
 	{
@@ -109,7 +63,7 @@ class HRController extends BaseController {
 				return "Error: Employee does not exist";
 			}
 
-			$position=Position::find($employee->position_id)
+			$position=Position::find($employee->position_id);
 			$position->open=true;
 			$position->save();
 
@@ -120,8 +74,9 @@ class HRController extends BaseController {
 				if($position)
 				{
 					$position->open=false;
-					$employee->position()->associate($position);
 					$position->save();
+					$employee->position()->associate($position);
+					
 				}
 
 			}
@@ -130,14 +85,6 @@ class HRController extends BaseController {
 				$employee->position_id=0;
 			}
 			
-			if(Input::get("employee_supervisor")>0)
-			{
-				$employee->supervisor_id=Input::get("employee_supervisor");
-			}
-			else
-			{
-				$employee->supervisor_id=0;
-			}
 	
 			$employee->save();
 		}
@@ -176,8 +123,9 @@ class HRController extends BaseController {
 				if($position)
 				{
 					$position->open=false;
-					$employee->position()->associate($position);
 					$position->save();
+					$employee->position()->associate($position);
+					
 				}
 
 			}
@@ -185,15 +133,19 @@ class HRController extends BaseController {
 			$portal=new EmployeePortal();
 			$portal->save();
 			$employee->employee_portal()->associate($portal);
-	
-			if(Input::get("employee_supervisor")>0)
-			{
-				$employee->supervisor_id=Input::get("employee_supervisor");
-			}
 			$employee->save();
 		}
 
 		$url=URL::route('basicviewroute');
 		return Redirect::to($url."/".$employee->login);
+	}
+
+	//route for HR Access Page
+	public function getHRPage()
+	{
+		$loginArray=Employee::lists('login');
+		
+		return View::make('hr')->with('loginArray',$loginArray)
+				->with('departments',Department::getIdNamePair());
 	}
 }

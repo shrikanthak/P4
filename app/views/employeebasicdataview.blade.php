@@ -39,7 +39,7 @@ $department_id=$data['department_id']!=''?'/department'.'/'.$data['department_id
 @if($addEditForm)
 	<div class="row">
 		<div class="col-xs-12">
-			<button type="button", id="edit_employee_button" class="btn btn-warning btn-lg float-right buttonmargin">Edit Employee</button>
+			<button type="button" id="edit_employee_button" class="btn btn-warning btn-lg pull-left formmargin">Edit Employee</button>
 		</div>
 	</div>
 	{{-- Hidden Data for Edit Form --}}

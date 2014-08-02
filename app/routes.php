@@ -32,9 +32,9 @@ Route::get('/logout','AuthenticationController@logOut');
 
 
 //HR Controllers
-Route::get('/hr_access','HRController@hraccess');
-Route::get('/positions/employees','HRController@getPositionsEmployees');
-Route::post('hr/employee/save/{empid}', ['before'=>'csrf|hraccess', 'uses'=>'HRController@saveEmployee']);
+Route::get('hrpage','HRController@getHRPage');
+Route::get('openpositions/{depid}/{empid?}','HRController@getOpenPositions');
+Route::post('hr/employee/save/{empid}', ['before'=>'csrf|hrfilter', 'uses'=>'HRController@saveEmployee']);
 
 
 //seeding the database
@@ -42,3 +42,4 @@ Route::get('/dbseeder','DebugController@dbseeder');
 //Debug function to view database connection info
 Route::get('/testdatabase','DebugController@testdatabase');
 Route::get('/test','DebugController@test');
+

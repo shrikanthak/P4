@@ -25,8 +25,7 @@ class EmployeeViewController extends BaseController {
 
 	public function viewEmployee($empid)
 	{
-		$employee=Employee::with('employee_portal')->with("position.department")->find($empid);
-		$data=$employee->get_data();
+		$data=Employee::GetAllEmployeeData($empid)->get_data_array();
 
 		return View::make('employeeview')->with('data',$data)->with('addEditForm',false);
 	}
@@ -44,27 +43,18 @@ class EmployeeViewController extends BaseController {
 		$rowArray=array();
 
 		//Eager loading all employee data for org chart
-		$employee=Employee::with('supervisor')->find($id);
+		$employee=Employee::with('position.supervisor_position.employee')->find($id);
 
 		//supervisor of the employee. Going one level up
-		if($employee->supervisor)
+		if((!!$employee->supervisor_position)?(!!$employee->supervisor_position->employee):false)
 		{
 			//reloading supervisor data with department and portal
-			$supervisor=Employee::with('employee_portal')
-								->with('position.department')
-								->with('reportees')
-								->find($employee->supervisor->id);
+			$supervisor=Employee::GetAllEmployeeDataEmployee($employee->position->supervisor->id);
 		
 			$this->addSelf_Reportees($supervisor, $rowArray,$linkSupervisor=false);
 		}
 		else
 		{
-			$employee=Employee::with('employee_portal')
-						->with('position.department')
-						->with('supervisor')
-						->with('reportees')
-						->find($id);
-
 			$this->addSelf_Reportees($employee, $rowArray);
 		}
 		
@@ -72,11 +62,14 @@ class EmployeeViewController extends BaseController {
 		return $rowArray;
 	}
 
-	private function addSelf_Reportees(&$employee, &$rowArray,$linkSupervisor=true)
+	private function addSelf_Reportees($employee, &$rowArray,$linkSupervisor=true)
 	{
 
 		$rowArray[]=$this->createRow($employee, $linkSupervisor);
-		foreach($employee->reportees as $reportee)
+		
+		$reportees=$employee->reportees()->get();
+
+		foreach($reportees as $reportee)
 	    {
 	      	$this->addSelf_Reportees($reportee, $rowArray);
 	    }
@@ -85,7 +78,10 @@ class EmployeeViewController extends BaseController {
 	private function createRow(&$employee,$linksupervisor=true)
 	{
 			//retrieving employee portal and department of reportees
-			$employee=Employee::with('employee_portal')->with('position.department')->find($employee->id);
+			$employee=Employee::with('employee_portal')
+			->with('position.department')
+			->with('position.supervisor_position')
+			->find($employee->id);
 			$htmlImageName=(!!$employee->employee_portal->imagefile) ? $employee->employee_portal->imagefile:'';
 
 			$row=array(
@@ -93,8 +89,10 @@ class EmployeeViewController extends BaseController {
 					"name"=>$employee->first_name." ".$employee->last_name,
 					"title"=>$employee->position->title,
 					"imagename"=>$htmlImageName,
-					"supervisor_id"=>(($linksupervisor) && (!!$employee->supervisor)) ? (string)$employee->supervisor->id:''
+					"supervisor_id"=>(($linksupervisor) && 	(!!$employee->position->supervisor_position)) ? 
+							(string)$employee->position->supervisor_position->id:''
 					);
+
 			return $row;
 	}
 
@@ -152,26 +150,24 @@ class EmployeeViewController extends BaseController {
 		//Search for Departments
 		$departments=Department::where('name','like','%'.$inputString.'%')->get();
 
-		$employees=Employee::with('employee_portal')->with('position.department')
-							->where('first_name','like','%'.$inputString.'%')
+		$employee_ids=Employee::where('first_name','like','%'.$inputString.'%')
 							->orWhere('last_name','like','%'.$inputString.'%')
-							->orWhere('login','like','%'.$inputString.'%')->get();
+							->orWhere('login','like','%'.$inputString.'%')->pluck('id');
 
-		return View::make('searchresults')->with('employees',$employees)
+		return View::make('searchresults')->with('employee_ids',$employee_ids)
 					->with('departments',$departments);
 
 	}
 
-	public function showEmployeeBasicView($login="hello")
+	public function showEmployeeBasicView($login="")
 	{
-		$loginid=($login=="")?Input::get('search_content'):$login;
-		
-		$employee=Employee::with('employee_portal')
-							->with("position.department")
-							->where('login','=',$loginid)
-							->get()->first();
 
-		$data=$employee->get_data();
+		$loginid=($login=="")?Input::get('search_content'):$login;
+		$employee=Employee::where('login','=',$loginid)->get()->first();
+		
+		$employee=Employee::GetAllEmployeeData($employee->id);
+
+		$data=$employee->get_data_array();
 		return View::make('employeebasicdataview')->with('data',$data)->with('addEditForm',true);
 	}
 }

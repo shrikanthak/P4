@@ -7,10 +7,11 @@ class Department extends Eloquent
 
 	public function positions()
 	{
-		return $this->hasMany('Positions','department_id');
+		return $this->hasMany('Position','department_id');
 	}
 
-	public static function getIdNamePair() {
+	public static function getIdNamePair()
+	{
 
 		$departments=array();
 
@@ -22,8 +23,10 @@ class Department extends Eloquent
 
 		return $departments;	
 	}
-	public function employees()
+
+	public function department_head()
 	{
-		return $this->hasManyThrough('Employee','Position','department_id','position_id');
+		return $this->belongsTo('Position','department_head_position_id');
 	}
+
 }
