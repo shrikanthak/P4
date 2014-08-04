@@ -17,10 +17,11 @@
 //employee routes
 //Route for employee to view his data
 Route::get('employee/view/{empid}','EmployeePortalController@viewEmployee');
-Route::get('employee/orgchart/{empid}','EmployeePortalController@viewOrgChart');
+Route::get('employee/orgchart/{empid}/{linktosupervisor?}','EmployeePortalController@viewOrgChart');
 Route::get('/search/{input}', 'EmployeePortalController@search');
 Route::get('/employeebasicview/{loginid}',['as'=>'basicviewroute','uses'=>'EmployeePortalController@showEmployeeBasicView']);
 Route::post('/employeeportal/save', 'EmployeePortalController@saveEmployeePortal');
+Route::get('/department/{depid}', 'EmployeePortalController@viewDepartment');
 
 //All Authentication Controllers
 Route::post('/authenticate', ['before'=>'csrf', 'uses'=>'AuthenticationController@authenticate']);

@@ -68,7 +68,6 @@ $(document).ready(function()
 			     url: "hr/openemployeelist/",
 			     success: function(data)
 			     {
-			     	alert(data);
 			     	var employees=JSON.parse(data);
 					var options='';
 					for (var i = 0; i < employees.length; i++) 
@@ -94,11 +93,11 @@ $(document).ready(function()
 			     success: function(data)
 			     {
 			     	 GetPositionTable();
-			     	 $("#divEditPosition").css('display','none')
+			     	 $("#divEditPosition").css('display','none');
 			     }
 			});	
 		}
-
+		$("select#position_department").attr('disabled',false);
 		return false;
 	});
 
@@ -117,4 +116,12 @@ $(document).ready(function()
 		
 	});
 	
+	$("#cancel_position_save").click(function()
+	{
+		$("select#position_department").attr('disabled',false);
+		$("#divEditPosition").css('display','none');
+
+	});
+	
+	 GetPositionTable();
 });

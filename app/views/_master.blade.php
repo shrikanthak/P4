@@ -20,7 +20,7 @@
 			<div class='flash-message'>{{ Session::get('flash_message') }}</div>
 		@endif
 
-		<div class="container masteroutline">
+		<div class="container-fluid masteroutline">
 
 			<!--Login Section on the top-->
 			<div class="row headercolor">

@@ -32,7 +32,7 @@
 			foreach($employee_ids as $empid)
 			{
 
-				$data=Employee::GetAllEmployeeData($empid)->get_data_array();
+				$data=EmployeePortalController::GetEmployeeViewData($empid);
 				echo'<div class="panel panel-default">';
 					echo'<div class="panel-body">';
 						echo View::make('employeebasicdataview')

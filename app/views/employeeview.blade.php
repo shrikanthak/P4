@@ -17,7 +17,7 @@
 		</blockquote>
 		
 		<div class="col-xs-2">
-			{{Form::button('View Org Chart',array('class'=>'btn btn-success btn-lg pull-left','onclick'=>'orgChartClick('.$data['current_id'].')'))}}
+			{{Form::button('View Org Chart',array('class'=>'btn btn-success btn-lg pull-left','onclick'=>'orgChartClick('.$data['position_id'].')'))}}
 			<!--button type="button" onclick='employee/orgchart/' class= "btn btn-success btn-lg pull-left">View Org Chart</button-->	
 		</div>
 

@@ -84,13 +84,13 @@ class PositionsController extends BaseController
 		
 		if($depid>0)
 		{
-			/*$department=Department::with('department_head')->find($depid);
+			$department=Department::with('department_head')->find($depid);
 			if(!!$department->department_head)
 			{
 				$positioncollection=$positioncollection->
 				merge(Position::with('employee','supervisor_position','department')
 					->where('id','=',$department->department_head->id)->get());
-			}*/
+			}
 		}
 		/*if($currentpos>0)
 		{

@@ -2,3 +2,15 @@
 table{
 border-collapse: separate !important;
 }
+
+.orgrow{
+    overflow: hidden;
+    border: 2px solid;
+    height:610px;
+}
+
+.orgcol{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+    border: 2px solid;
+}

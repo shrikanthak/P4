@@ -5,10 +5,10 @@
 	@section('bodycontent')
 		<div id='divHidden' style='display:none'>{{$dataArray}}</div>
 		{{HTML::image('','No Image',array('style'=>'display:none','id'=>'hiddenImage'))}}
-		<div class="row">
+		<div class="row orgrow">
 
-			<div class='col-sm-8'><div class='well' id='chart_div'></div></div>
-			<div class='col-sm-4'>
+			<div class='col-xs-7 orgcol'><div id='chart_div'></div></div>
+			<div class='col-xs-5 orgcol'>
 				@include('employeebasicdataview')
 			</div>
 		</div>

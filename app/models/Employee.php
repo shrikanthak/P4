@@ -20,42 +20,33 @@ class Employee extends Eloquent
 		return $this->hasOne('Position','employee_id');
 	}
 
-	public function reportees()
+
+	public static function GetDataArray($employee)
 	{
-		return $this->hasManyThrough('Employee','Position','supervisor_position_id','id');
+		if($employee)
+		{
+			if (!!$employee->portal)
+			{
+				$employee=$employee->with('portal')->get();
+			}
+			return array("current_id"=>$employee->id,
+			"first_name"=>$employee->first_name,
+			"last_name"=>$employee->last_name,
+			"image"=>(!!$employee->employee_portal->imagefile) ? $employee->employee_portal->imagefile:"",
+			"paragraph"=>$employee->employee_portal->employee_info,
+			"login"=>$employee->login);
+		}
+		else
+		{
+			return array("current_id"=>0,
+			"first_name"=>'',
+			"last_name"=>'',
+			"image"=>"",
+			"paragraph"=>'',
+			"login"=>'');
+		}
+
 	}
-
-	public function get_data_array()
-	{
-		$data=array("current_id"=>$this->id,
-		"first_name"=>$this->first_name,
-		"last_name"=>$this->last_name,
-		"title"=>(!!$this->position)? $this->position->title:'',
-		"department"=>((!!$this->position)&&(!!$this->position->department))?$this->position->department->name:'',
-		"department_id"=>((!!$this->position)&&(!!$this->position->department))?$this->position->department->id:0,
-		"supervisor"=>((!!$this->position)&&(!!$this->position->supervisor_position)) ? ((!!$this->position->supervisor_position->employee)? 
-						$this->position->supervisor_position->employee->first_name." "
-						.$this->position->supervisor_position->employee->last_name:''):'',
-		"supervisor_id"=>((!!$this->position)&&(!!$this->position->supervisor_position))?((!!$this->position->supervisor_position->employee)?
-							$this->position->supervisor_position->employee->id:0):'',
-		"image"=>(!!$this->employee_portal->imagefile) ? $this->employee_portal->imagefile:"",
-		"head_of_department"=>((!!$this->position)&&(!!$this->position->department_head_of)) ? $this->position->department_head_of->name:'',
-		"paragraph"=>$this->employee_portal->employee_info,
-		"position_id"=>(!!$this->position)?$this->position->id:0,
-		"login"=>$this->login,);
-
-		return $data;
-	}
-
-	public static function GetAllEmployeeData($empid)
-	{
-		$employee=Employee::with('employee_portal')
-		->with("position.department.department_head")
-		->with("position.supervisor_position.employee")
-		->with("position.department_head_of")->find($empid);
-		return $employee;
-	}
-
 
 }
 

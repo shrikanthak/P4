@@ -1,5 +1,6 @@
 <?php
 
+use Paste\Pre;
 
 class EmployeePortalController extends BaseController {
 
@@ -25,15 +26,15 @@ class EmployeePortalController extends BaseController {
 
 	public function viewEmployee($empid)
 	{
-		$data=Employee::GetAllEmployeeData($empid)->get_data_array();
-
+		$data=EmployeePortalController::GetEmployeeViewData($empid);
 		return View::make('employeeview')->with('data',$data)->with('addEditForm',false);
 	}
-	public function viewOrgChart($empid)
+	
+	public function viewOrgChart($posid, $linktosupervisor=true)
 	{
-		$dataArray=$this->OrgChartData((integer)$empid);
-		$employee=Employee::GetAllEmployeeData($empid);
-		$data=$employee->get_data_array($employee);
+		$dataArray=$this->OrgChartData((integer)$posid,$linktosupervisor);
+		$position=Position::with('employee')->find($posid);
+		$data=EmployeePortalController::GetEmployeeViewData((!!$position->employee)? $position->employee->id:0);
 		return View::make('orgchart')
 		->with('dataArray',json_encode($dataArray))
 		->with('data',$data)
@@ -42,63 +43,67 @@ class EmployeePortalController extends BaseController {
 
 	
 
-	private function OrgChartData($id)
+	private function OrgChartData($posid, $linktosupervisor=true)
 	{
 
 		$rowArray=array();
 
-		//Eager loading all employee data for org chart
-		$employee=Employee::with('position.supervisor_position.employee')->find($id);
+		$position=Position::with('supervisor_position')->find($posid);
 
 		//supervisor of the employee. Going one level up
-		if((!!$employee->supervisor_position)?(!!$employee->supervisor_position->employee):false)
-		{
-			//reloading supervisor data with department and portal
-			$supervisor=Employee::GetAllEmployeeDataEmployee($employee->position->supervisor->id);
-		
-			$this->addSelf_Reportees($supervisor, $rowArray,$linkSupervisor=false);
+		if(!!$position->supervisor_position && $linktosupervisor)
+		{	
+			$this->addSelf_Reportees($position->supervisor_position, $rowArray,$linkSupervisor=false);
 		}
 		else
 		{
-			$this->addSelf_Reportees($employee, $rowArray);
+			$this->addSelf_Reportees($position, $rowArray,$linkSupervisor=false);
 		}
 		
 		
 		return $rowArray;
 	}
 
-	private function addSelf_Reportees($employee, &$rowArray,$linkSupervisor=true)
+	private function addSelf_Reportees($position, &$rowArray,$linkSupervisor=true)
 	{
-
-		$rowArray[]=$this->createRow($employee, $linkSupervisor);
+		$rowArray[]=$this->createRow($position, $linkSupervisor);
 		
-		$reportees=$employee->reportees()->get();
+		$reportee_positions=$position->reportee_positions()->get();
 
-		foreach($reportees as $reportee)
+		foreach($reportee_positions as $reportee_position)
 	    {
-	      	$this->addSelf_Reportees($reportee, $rowArray);
+	      	$this->addSelf_Reportees($reportee_position, $rowArray);
 	    }
 	}	
 
-	private function createRow(&$employee,$linksupervisor=true)
+	private function createRow($position,$linksupervisor=true)
 	{
-			//retrieving employee portal and department of reportees
-			$employee=Employee::with('employee_portal')
-			->with('position.department')
-			->with('position.supervisor_position')
-			->find($employee->id);
-			$htmlImageName=(!!$employee->employee_portal->imagefile) ? $employee->employee_portal->imagefile:'';
+		//retrieving employee portal and department of reportees
 
-			$row=array(
-					"id"=>$employee->id,
-					"name"=>$employee->first_name." ".$employee->last_name,
-					"title"=>$employee->position->title,
-					"imagename"=>$htmlImageName,
-					"supervisor_id"=>(($linksupervisor) && 	(!!$employee->position->supervisor_position)) ? 
-							(string)$employee->position->supervisor_position->id:''
-					);
+		$supervisor_position_collection=$position->supervisor_position()->get();
 
-			return $row;
+		$row=array(
+				"id"=>$position->id,
+				"title"=>$position->title,
+				"supervisor_id"=>(($linksupervisor) && 	(!!$supervisor_position_collection[0])) ? 
+						(string)$supervisor_position_collection[0]->id:''
+				);
+
+		$employee=Employee::with('employee_portal')->find($position->employee_id);
+
+		if(!!$employee)
+		{
+			$row["name"]=$employee->first_name." ".$position->employee->last_name;
+			$row["imagename"]=(!!$employee->employee_portal->imagefile) ? 
+									$employee->employee_portal->imagefile:'';
+		}
+		else
+		{
+			$row["name"]='';
+			$row["imagename"]='';
+		}
+
+		return $row;
 	}
 
 	public function saveEmployeePortal()
@@ -169,11 +174,36 @@ class EmployeePortalController extends BaseController {
 	public function showEmployeeBasicView($loginid)
 	{
 
-		$employee=Employee::where('login','=',$loginid)->get()->first();
-		
-		$employee=Employee::GetAllEmployeeData($employee->id);
-
-		$data=$employee->get_data_array();
+		$data=EmployeePortalController::GetEmployeeViewData(Employee::where('login','=',$loginid)->pluck('id'));
 		return View::make('employeebasicdataview')->with('data',$data)->with('addEditForm',true);
+	}
+
+	public static function GetEmployeeViewData($empid)
+	{
+		$employee=Employee::with('employee_portal')
+							->with('position')
+							->find($empid);
+		$data=Employee::GetDataArray($employee);
+		$position=null;
+		if (($employee) && ($employee->position))
+		{
+			$position=Position::with('department')
+				->with('supervisor_position.employee')
+				->with('department_head_of')
+				->find($employee->position->id);
+		}
+		//echo print_r((Position::GetDataArray($position)));
+		//dd();
+
+		return array_merge($data,Position::GetDataArray($position));
+	}
+
+	public function viewDepartment($depid)
+	{
+		$department=Department::with('department_head')->find($depid);
+		if(!!$department->department_head)
+		{
+			return $this->viewOrgChart($department->department_head->id, $linktosupervisor=false);
+		}
 	}
 }

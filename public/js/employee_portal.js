@@ -12,5 +12,9 @@ function clickCancel()
 
 function orgChartClick(id)
 {
-	window.location.replace('/employee/orgchart/'+id);
+	if (id>0)
+	{
+		window.location.replace('/employee/orgchart/'+id);
+	}
+	
 }

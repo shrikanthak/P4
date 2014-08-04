@@ -78,7 +78,6 @@ class EmployeeController extends BaseController
 		{
 			$ids=array($ids);
 		}
-		echo print_r($ids);
 		$employees=Employee::whereNotIn('id',$ids)->get();
 		
 		$employee_array=array(array('id'=>0,'description'=>'------------None---------------'));
