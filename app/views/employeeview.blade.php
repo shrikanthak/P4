@@ -6,7 +6,10 @@
 
 @section('bodycontent')
 	
+	
+
 	@include('employeebasicdataview')
+	
 	
 	<div class="row formmargin" id="divViewInfo">
 		<blockquote class="bg-info">
@@ -43,8 +46,9 @@
 					{{ Form::file('fileImageInput',array('id'=>'fileImageInput')) }}<br>
 				</div>
 
+				
 				<div class='form-group'>
-					<button type='submit'class="btn btn-info btn-lg pull-left" name='btnSave'>Save</button>
+					<button type='submit'class="btn btn-info btn-lg pull-left" name='btnSave'>Save</button> &nbsp; &nbsp;
 					<button type='button' onclick="clickCancel()"class="btn btn-default btn-lg pull-left" name='btnCancel'>Cancel</button>
 					<button type="button" href="/resetpassword" class="btn btn-danger btn-lg pull-right" name='btnResetPassword'>Reset Password</button>
 				</div>

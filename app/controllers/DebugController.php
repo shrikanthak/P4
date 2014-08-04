@@ -73,15 +73,15 @@ class DebugController extends BaseController
 		{
 			//Seeding Departments
 
-			$head=Department::create(array('name' => 'Corporate Head', 'code'=>'COR'));
-			$finance=Department::create(array('name' => 'Finance & Accounting', 'code'=>'FIN'));
-			$marketing=Department::create(array('name' => 'Marketing & Sales','code'=>'MAR'));
-			$manufacturing=Department::create(array('name' => 'Manufacturing & Operations','code'=>'MNO'));
-			$procurement=Department::create(array('name' => 'Procurement','code'=>'PUR'));
-			$research=Department::create(array('name' => 'Research & Ddevelopment','code'=>'RND'));
-			$it=Department::create(array('name' => 'Information Technology','code'=>'IT'));
-			$hr=Department::create(array('name' => 'Human Resources','code'=>'HR'));
-			$cs=Department::create(array('name' => 'Customer Support','code'=>'CUS'));
+			$head=Department::create(array('name' => 'Corporate Head', 'code'=>'COR','corporate_head'=>true));
+			//$finance=Department::create(array('name' => 'Finance & Accounting', 'code'=>'FIN'));
+			//$marketing=Department::create(array('name' => 'Marketing & Sales','code'=>'MAR'));
+			//$manufacturing=Department::create(array('name' => 'Manufacturing & Operations','code'=>'MNO'));
+			//$procurement=Department::create(array('name' => 'Procurement','code'=>'PUR'));
+			//$research=Department::create(array('name' => 'Research & Ddevelopment','code'=>'RND'));
+			//$it=Department::create(array('name' => 'Information Technology','code'=>'IT'));
+			//$hr=Department::create(array('name' => 'Human Resources','code'=>'HR'));
+			//$cs=Department::create(array('name' => 'Customer Support','code'=>'CUS'));
 
 		});
 
@@ -98,10 +98,12 @@ class DebugController extends BaseController
 			$department=Department::where('code','=','COR')->get()->first();
 			$position->department()->associate($department);
 			$position->save();
+			$department->department_head()->associate($position);
+			$department->save();
 
 
-			$position=new Position();
-			$position->title="HR Manager";
+			/*$position=new Position();
+			$position->title="HR Director";
 			$position->hr_access=true;
 			$position->open=true;
 			$department=Department::where('code','=','HR')->get()->first();
@@ -125,7 +127,7 @@ class DebugController extends BaseController
 			$position->save();
 			
 			$position=new Position();
-			$position->title="Operations Manager";
+			$position->title="Operations Director";
 			$position->hr_access=false;
 			$position->open=true;
 			$department=Department::where('code','=','MNO')->get()->first();
@@ -154,7 +156,7 @@ class DebugController extends BaseController
 			$position->open=true;
 			$department=Department::where('code','=','FIN')->get()->first();
 			$position->department()->associate($department);
-			$position->save();
+			$position->save();*/
 
 		});
 
@@ -165,21 +167,20 @@ class DebugController extends BaseController
 		DB::transaction(function()
 		{
 			$employee=new Employee();
-			$employee->first_name="Shrikanth";
-			$employee->last_name="Ananthakrishnan";
-			$employee->login="sananthakrishnan";
+			$employee->first_name="Michael";
+			$employee->last_name="White";
+			$employee->login="mwhite";
 			$employee->password=Hash::make('halwa');
-			$position=Position::where('title','=','Company President')->get()->first();
-			$employee->position()->associate($position);
+
 			$portal=new EmployeePortal();
 			$portal->save();
+			
 			$employee->employee_portal()->associate($portal);
 			$employee->save();
-
-
-
 			
-
+			$position=Position::where('title','=','Company President')->get()->first();
+			$position->employee()->associate($employee);
+			$position->save();
 		});
 	}
 	

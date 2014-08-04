@@ -25,7 +25,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function hr_access()
 	{
-		$position=Position::find($this->position_id);
+		$position=Position::where('employee_id','=',$this->id)->get()->first();
 		return $position->hr_access;
 	}
 

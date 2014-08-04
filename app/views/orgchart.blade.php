@@ -5,7 +5,13 @@
 	@section('bodycontent')
 		<div id='divHidden' style='display:none'>{{$dataArray}}</div>
 		{{HTML::image('','No Image',array('style'=>'display:none','id'=>'hiddenImage'))}}
-		<div id='chart_div'></div>
+		<div class="row">
+
+			<div class='col-sm-8'><div class='well' id='chart_div'></div></div>
+			<div class='col-sm-4'>
+				@include('employeebasicdataview')
+			</div>
+		</div>
 
 		{{-- The following script is for generating org chart and trapping evemts --}}
 		

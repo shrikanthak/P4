@@ -23,10 +23,7 @@ class AuthenticationController extends BaseController
 
 	}
 
-	public function showWelcome()
-	{
-		return View::make('welcome');
-	}
+	
 
 	public function authenticate()
 	{

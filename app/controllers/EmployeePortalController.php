@@ -1,7 +1,7 @@
 <?php
 
 
-class EmployeeViewController extends BaseController {
+class EmployeePortalController extends BaseController {
 
 	/*
 	|--------------------------------------------------------------------------
@@ -32,7 +32,12 @@ class EmployeeViewController extends BaseController {
 	public function viewOrgChart($empid)
 	{
 		$dataArray=$this->OrgChartData((integer)$empid);
-		return View::make('orgchart')->with('dataArray',json_encode($dataArray));
+		$employee=Employee::GetAllEmployeeData($empid);
+		$data=$employee->get_data_array($employee);
+		return View::make('orgchart')
+		->with('dataArray',json_encode($dataArray))
+		->with('data',$data)
+		->with('addEditForm',false);
 	}
 
 	
@@ -148,21 +153,22 @@ class EmployeeViewController extends BaseController {
 		$inputString=$input;
 		
 		//Search for Departments
-		$departments=Department::where('name','like','%'.$inputString.'%')->get();
+		$departments=Department::with('department_head.employee')
+								->where('name','like','%'.$inputString.'%')
+								->orWhere('code','like','%'.$inputString.'%')
+								->get();
 
 		$employee_ids=Employee::where('first_name','like','%'.$inputString.'%')
 							->orWhere('last_name','like','%'.$inputString.'%')
-							->orWhere('login','like','%'.$inputString.'%')->pluck('id');
+							->orWhere('login','like','%'.$inputString.'%')->distinct()->lists('id');
 
-		return View::make('searchresults')->with('employee_ids',$employee_ids)
-					->with('departments',$departments);
+		return View::make('searchresults')->with('employee_ids',$employee_ids)->with('departments',$departments);
 
 	}
 
-	public function showEmployeeBasicView($login="")
+	public function showEmployeeBasicView($loginid)
 	{
 
-		$loginid=($login=="")?Input::get('search_content'):$login;
 		$employee=Employee::where('login','=',$loginid)->get()->first();
 		
 		$employee=Employee::GetAllEmployeeData($employee->id);

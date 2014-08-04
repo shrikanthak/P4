@@ -20,12 +20,15 @@
 		
 		@include('hr_employee')
 		
-	</details><br><br>
+	</details><br>
 	<details>
 		<summary>Position Data</summary>
-	</details><br><br>
+		<br>
+		@include('hr_position')
+	</details><br>
 	<details>
 		<summary>Department Data</summary>
+		@include('hr_department')
 	</details>
 
 	
@@ -33,4 +36,6 @@
 
 @section('footercontent')
 	{{HTML::script('js/hr_employee.js')}}
+	{{HTML::script('js/hr_position.js')}}
+	{{HTML::script('js/hr_department.js')}}
 @stop

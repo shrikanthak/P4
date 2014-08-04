@@ -46,7 +46,7 @@
 	{{Form::open(array('url'=>'/hr','method'=>'POST', 'id'=>'edit_employee_form'))}}
 		<div class="row formmargin">
 			<div class="col-xs-12">
-				{{Form::label('Login_id','Login ID:')}}
+				{{Form::label('Login_id','Login ID:',array('id'=>'Login_id'))}}
 			</div>
 		</div>
 		
@@ -62,25 +62,10 @@
 				{{Form::text('last_name','',array('class'=>'form-control'))}}
 			</div>
 
-		</div>
-		
-		<div class="row formmargin">
-			
-			<div class="col-xs-4">
-				{{Form::label('employee_department','Department')}}
-				{{Form::select('employee_department',$departments, null ,
-				array('class'=>'form-control'))}}
-			</div>
-			
-			<div class="col-xs-8">
-				{{Form::label('employee_position','Position')}}
-				{{Form::select('employee_position',array(' '),null,array('class'=>'form-control'))}}
-			</div>
-
 			<input name="_employee_id" type="hidden" value="0" id='_employee_id'></input>
 
 		</div>
-
+		
 		<br>
 
 		<div class="row formmargin">
@@ -91,7 +76,6 @@
 				<input type="button" name="cancel" id="cancel" class="btn btn-lg btn-default pull-left" value="Cancel">
 			</div>
 			<div class="col-xs-10">
-				<input type="button" name="delete" id="delete" class="btn btn-lg btn-danger pull-right" value="DELETE!">
 			</div>
 		</div>
 

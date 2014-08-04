@@ -1,17 +1,3 @@
-/*function employeeNewCurrent()
-{
-	
-    if (document.getElementById("currentEmployee").checked)
-    {
-       	document.getElementById("divViewEmployee").style.display = 'block';
-    	document.getElementById("divEditEmployee").style.display = 'none';
-    }
-    else if(document.getElementById("newEmployee").checked)
-    {
-        document.getElementById("divViewEmployee").style.display = 'none';
-    	document.getElementById("divEditEmployee").style.display = 'block';
-    }
-}*/
 
 function itemNewCurrent(state)
 {
@@ -28,77 +14,29 @@ function itemNewCurrent(state)
         document.getElementById("divSearchEmployee").style.display = 'none';
         document.getElementById("divEditEmployee").style.display = 'block';
         document.getElementById("divViewEmployee").style.display = 'none';
-        document.getElementById('_employee_id').value=0;
+        
         $("#currentEmployee").attr("disabled",true);
         $("#newEmployee").attr("disabled",true);
+        
         if (document.getElementById("newEmployee").checked)
         {
+          document.getElementById('_employee_id').value=0;
           clearEditForm();
         }
          
     }
 }
 
-function setSelectedValue(selectObj, valueToSet) {
-    for (var i = 0; i < selectObj.options.length; i++) {
-        if (selectObj.options[i].value== valueToSet) {
-            selectObj.options[i].selected = true;
-            return;
-        }
-    }
-}
-
-function getPositionsTable()
-{
-    if($("#position_department").val()>0)
-    {
-        $.ajax(
-        {
-           type: "GET",
-           url: "/positionstable",
-           data: {department:$("#position_department").val(),allpositions:$("#position_department").checked()}, 
-           success: function(data)
-           {
-               //alert(data);
-               $('#divPositionsView').html(data);
-           }
-        });
-    }
-}
-
-
-function departmentChange()
-{
-  $.ajax(
-  {
-     type: "GET",
-     async:false,
-     url: "/openpositions/"+$("#employee_department").val()+'/'+$("#_employee_id").val(),
-     success: function(data)
-     {
-          var positions=JSON.parse(data);
-          var options='';
-          for (var i = 0; i < positions.length; i++) 
-          {
-              options += '<option value="' + positions[i]['id'] + '">' + positions[i]['description'] + '</option>';
-          }
-          $("select#employee_position").html(options);
-
-     }
-  });
-}
 
 function clearEditForm()
 {
-    $("#Login_id").val("Login ID: ");
+    $("#Login_id").text("Login ID: ");
     $("#first_name").val("");
     $("#last_name").val("");
 }
 
 $( document ).ready(function()
 {    
-  
-  $("select#employee_department").change(departmentChange)
 
   $("#cancel").click(function()
   {
@@ -117,7 +55,6 @@ $( document ).ready(function()
 
   $("#save").click(function()
   {
-    
     if($("#first_name").val() && $("#last_name").val())
     {
 
@@ -125,16 +62,16 @@ $( document ).ready(function()
       $.ajax(
       {
         type: "POST",
-        url: "hr/employee/save/"+$("#_employee_id").val(),
+        async:false,
+        url: "hr/employee/save/" + $("#_employee_id").val(),
         data: postdata, // serializes the form's elements.
         success: function(data)
         {
-          $('#divViewEmployee').html(data);
           $("#currentEmployee").attr("disabled",false);
           $("#newEmployee").attr("disabled",false);
           $("#currentEmployee").attr("checked",true);
           itemNewCurrent("current");
-
+          $('#divViewEmployee').html(data);
         }
 
       });
@@ -154,28 +91,42 @@ $( document ).ready(function()
         $.ajax(
         {
            type: "GET",
-           url: "/employeebasicview",
-           data: {search_content:$("#search_employee").val()}, // serializes the form's elements.
+           url: "/employeebasicview/"+$("#search_employee").val(),
            success: function(data)
            {
              $('#divViewEmployee').html(data);
-             $("#Login_id").val("Login ID: "+$(data).find('#_login').text());
+             $("#Login_id").text("Login ID: "+$(data).find('#_login').text());
              $("#first_name").val($(data).find('#_first_name').text());
              $("#last_name").val($(data).find('#_last_name').text());
-             $("input#_employee_id").val($(data).find('#_emp_id').text());
-             $('select[name="employee_department"]').find('option[value="'+$(data).find('#_department_id').text()+'"]').attr("selected",true);
-             //$("#employee_department").val(value);
-             departmentChange();
-             //value=$(data).find('#_position_id').text();
-             //setSelectedValue(document.getElementByID("#employee_position"),$(data).find('#_position_id').text());
-             $('select[name="employee_position"]').find('option[value="'+$(data).find('#_position_id').text()+'"]').attr("selected",true);
-             //$("#employee_position").val(value);
+             $("#_employee_id").val($(data).find('#_emp_id').text());
+             $("#_delete_employee_id").val($(data).find('#_emp_id').text());
              $("#edit_employee_button").bind('click',function()
-                {
-                   itemNewCurrent("new");
-                  
+              {
+                 itemNewCurrent("new");
 
-                });
+              });
+             
+             $("#delete_employee_button").bind('click',function()
+              {
+
+                 if(confirm('You are about to delete employee: '+
+                    $("#_first_name").html()  + ' ' + $("#_last_name").html()))
+                 {
+                    $.ajax(
+                    {
+                        type: "POST",
+                        url: "hr/employee/delete",
+                        data:$('#employee_delete_form').serialize(),
+                        success: function(data)
+                        {
+                          alert(data);
+                        }
+
+                    });
+                 }
+
+              });
+
            }
         });
 

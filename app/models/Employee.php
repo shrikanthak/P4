@@ -17,7 +17,7 @@ class Employee extends Eloquent
 
 	public function position()
 	{
-		return $this->belongsTo('Position','position_id');
+		return $this->hasOne('Position','employee_id');
 	}
 
 	public function reportees()
@@ -30,16 +30,16 @@ class Employee extends Eloquent
 		$data=array("current_id"=>$this->id,
 		"first_name"=>$this->first_name,
 		"last_name"=>$this->last_name,
-		"title"=>$this->position->title,
-		"department"=>(!!$this->position->department)?$this->position->department->name:'',
-		"department_id"=>(!!$this->position->department)?$this->position->department->id:0,
-		"supervisor"=>(!!$this->position->supervisor_position) ? ((!!$this->position->supervisor_position->employee)? 
+		"title"=>(!!$this->position)? $this->position->title:'',
+		"department"=>((!!$this->position)&&(!!$this->position->department))?$this->position->department->name:'',
+		"department_id"=>((!!$this->position)&&(!!$this->position->department))?$this->position->department->id:0,
+		"supervisor"=>((!!$this->position)&&(!!$this->position->supervisor_position)) ? ((!!$this->position->supervisor_position->employee)? 
 						$this->position->supervisor_position->employee->first_name." "
 						.$this->position->supervisor_position->employee->last_name:''):'',
-		"supervisor_id"=>(!!$this->position->supervisor_position)?((!!$this->position->supervisor_position->employee)?
+		"supervisor_id"=>((!!$this->position)&&(!!$this->position->supervisor_position))?((!!$this->position->supervisor_position->employee)?
 							$this->position->supervisor_position->employee->id:0):'',
 		"image"=>(!!$this->employee_portal->imagefile) ? $this->employee_portal->imagefile:"",
-		"head_of_department"=>(!!$this->position->department_head_of) ? $this->department_head_of->name:'',
+		"head_of_department"=>((!!$this->position)&&(!!$this->position->department_head_of)) ? $this->position->department_head_of->name:'',
 		"paragraph"=>$this->employee_portal->employee_info,
 		"position_id"=>(!!$this->position)?$this->position->id:0,
 		"login"=>$this->login,);
@@ -53,7 +53,6 @@ class Employee extends Eloquent
 		->with("position.department.department_head")
 		->with("position.supervisor_position.employee")
 		->with("position.department_head_of")->find($empid);
-
 		return $employee;
 	}
 

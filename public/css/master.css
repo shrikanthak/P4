@@ -11,6 +11,7 @@
 {
 	box-shadow:40px 40px 50px 20px black;	
 	min-height: 900px;
+	overflow: auto;
 }
 
 .searchform
@@ -32,9 +33,10 @@
 
 .imageformat
 {
-	max-width: 200px;
-	max-height: 200px;
+	max-width: 125px;
+	max-height: 125px;
 	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 .formmargin
@@ -47,3 +49,11 @@
 	margin-left:10px;
 	margin-right:10px;
 }
+
+.hrtable{
+
+	width: 200px;
+ 	height: 400px;
+ 	overflow: auto;
+}
+

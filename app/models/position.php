@@ -6,7 +6,7 @@ class Position extends Eloquent
 	
 	public function employee()
 	{
-		return $this->hasOne('Employee','position_id');
+		return $this->belongsTo('Employee','employee_id');
 
 	}
 

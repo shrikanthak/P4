@@ -19,6 +19,7 @@ class CreateDepartmentGroupTable extends Migration {
 			$table->increments('id');
 			$table->string('name')->nullable(false);
 			$table->string('code')->nullable(false)->unique();
+			$table->boolean('corporate_head')->default(false);
 			$table->timestamps();
 
 		});
