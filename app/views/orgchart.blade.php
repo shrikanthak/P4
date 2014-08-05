@@ -10,6 +10,11 @@
 			<div class='col-xs-7 orgcol'><div id='chart_div'></div></div>
 			<div class='col-xs-5 orgcol'>
 				@include('employeebasicdataview')
+				<div class='row'>
+					<div class='col-xs-12'>
+						<h4 style='text-align:center'><a href={{'/employee/view/'.$data['current_id']}}>View Page</a></h4>
+					</div>
+				</div>
 			</div>
 		</div>
 
