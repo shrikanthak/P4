@@ -30,8 +30,7 @@ $(document).ready(function()
 
 	$("[id^=positionedit]").click(function()
 		{
-			alert('position edit');
-			return false;
+			
 		});
 	
 //Fired when new position button is clicked

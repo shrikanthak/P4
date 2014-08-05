@@ -27,6 +27,8 @@ Route::get('/department/{depid}', 'EmployeePortalController@viewDepartment');
 Route::post('/authenticate', ['before'=>'csrf', 'uses'=>'AuthenticationController@authenticate']);
 Route::get('/login','AuthenticationController@showLogin');
 Route::get('/logout','AuthenticationController@logOut');
+Route::get('/resetpassword',['before'=>'auth','uses'=>'AuthenticationController@getResetPasswordPage']);
+Route::post('/resetpassword',['before'=>'csrf|auth','uses'=>'AuthenticationController@resetPassword']);
 
 
 //Nagivation Controllers

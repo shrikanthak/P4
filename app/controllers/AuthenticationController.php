@@ -55,5 +55,30 @@ class AuthenticationController extends BaseController
 
 	}
 
+	public function getResetPasswordPage()
+	{
+		return View::make('resetpassword');
+	}
+
+	public function resetPassword()
+	{
+		$credentials=['login'=>Auth::user()->login, 'password'=>Input::get('oldpassword')];
+		if (!Auth::validate($credentials))
+		{
+			return Redirect::to('/login')->with('flash_message', 'You are not logged in. Please login to change your password');
+		}
+		elseif(Input::get('newpassword') !== Input::get('confirmnewpassword'))
+		{
+			return Redirect::to('/resetpassword')->with('flash_message', 'Passwords do not match.');
+		}
+		else
+		{
+			$employee=Employee::where('login','=',Auth::user()->login)->get()->first();
+			$employee->password=Hash::make(Input::get('newpassword'));
+			$employee->save();
+			return Redirect::to('/employee/view/'.Auth::user()->id)
+			->with('flash_message', 'Your password has been reset');;
+		}
+	}
 
 }

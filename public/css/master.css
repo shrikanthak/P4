@@ -29,6 +29,8 @@
 .flash-message
 {
 	background-color:yellow;
+	text-align: center;
+	font-style: bold;
 }
 
 .imageformat

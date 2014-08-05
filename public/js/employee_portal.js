@@ -18,3 +18,13 @@ function orgChartClick(id)
 	}
 	
 }
+
+
+$(document).ready(function()
+{
+	$('#resetpassword').click(function()
+	{
+		window.location.replace('/resetpassword');
+	});
+
+});
