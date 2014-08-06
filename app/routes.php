@@ -38,7 +38,7 @@ Route::get('hrpage',['before'=>'hrfilter','uses'=>'NavigationController@getHRPag
 //Employee Controllers
 Route::post('hr/employee/save/{empid}', ['before'=>'csrf|hrfilter', 'uses'=>'EmployeeController@saveEmployee']);
 Route::post('hr/employee/delete', ['before'=>'csrf|hrfilter', 'uses'=>'EmployeeController@deleteEmployee']);
-Route::get('hr/openemployeelist', 'EmployeeController@getOpenEmployeeList');
+Route::get('hr/openemployeelist/{includeemployee?}', 'EmployeeController@getOpenEmployeeList');
 
 //Positions controllers
 Route::get('hr/positionstable/{depid}/{positionstatus}','PositionsController@getPositionsTable');

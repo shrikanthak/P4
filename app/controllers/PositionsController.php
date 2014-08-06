@@ -92,29 +92,31 @@ class PositionsController extends BaseController
 					->where('id','=',$department->department_head->id)->get());
 			}
 		}
-		/*if($currentpos>0)
+		if($currentpos!=0)
 		{
-			$position=Position::with('reportee_positions')->find($currentpos)
-			$this->remove_Self_Reportees($positionscollection,$position)
-		}*/
+			$position=Position::with('reportee_positions')
+			->find($currentpos);
+			$this->remove_Self_Reportees($positioncollection,$position);
+		}
 
 		return $this->formatOutputData($positioncollection,'array');
 		
 	}
 
-	/*private function remove_Self_Reportees(&$positionscollection,$position)
+	private function remove_Self_Reportees(&$positioncollection,$position)
 	{
-		
-		$positionscollection=$positionscollection->
-					filter(array(new RemovePosition($position->id), 
-						'removePosition'));
-		$reportees=$position->reportees()->get();
+		PositionsController::$_posid=$position->id;
+		$positioncollection=$positioncollection->filter(function($pos)
+			{
+				return $pos->id != PositionsController::$_posid;
+			});
+		$reportees=$position->reportee_positions()->get();
 		foreach($reportees as $reportee)
 		{
 			
-			$this->remove_Self_Reportees($positionscollection,$reportee);	
+			$this->remove_Self_Reportees($positioncollection,$reportee);	
 		}
-	}*/
+	}
 
 	public function savePosition()
 	{
@@ -149,17 +151,5 @@ class PositionsController extends BaseController
 		return "success";
 	}
 
+	private static $_posid=0;
 }
-
-/*Class RemovePosition
-{
-	private $posid
-	__construct($posid)
-	{
-		$this->posid=$posid
-	}
-	public function removePosition($position)
-	{
-		return ($position->id != $this->posid);
-	}
-}*/

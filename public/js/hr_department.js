@@ -1,7 +1,11 @@
 $(document).ready(function()
 {
-	var getSupervisorList=function()
-	{
+	var getSupervisorList=function(selectposid)
+	{	
+		if(selectposid===undefined)
+		{
+			selectposid=0;
+		}
 		$.ajax(
 		  {
 		     type: "GET",
@@ -15,6 +19,7 @@ $(document).ready(function()
 				  options += '<option value="' + positions[i]['id'] + '">' + positions[i]['description'] + '</option>';
 				}
 				$("select#supervisor_position").html(options);
+				$("#supervisor_position option[value='"+String(selectposid)+"']").attr('selected','selected');
 		     }
 		  });
 	}
@@ -31,47 +36,52 @@ $(document).ready(function()
 
 	
 	//edit department button click
-	$("[id^=departmentedit]").click(function()
+	var departmentEdit=function(depid)
 	{
-		var id=$(this).attr('id');
-		var depid=id.substr(('departmentedit').length);
+		if(depid===undefined) return false;
+		if(depid==0) return false;
+
 		$('#department_code').val($('#departmentcode'+depid).text());
 		$('#department_name').val($('#departmentname'+depid).text());
 		var positiondesc=$('#departmenthead'+ depid).text();
 		var firstchar=positiondesc.indexOf('-')+1;
 		var lastchar=positiondesc.indexOf(':');
 		var posid=positiondesc.substr(firstchar,lastchar-firstchar);
-		getSupervisorList();
-		$("select#supervisor_position").val(posid);
+		getSupervisorList(posid);
+		//$("select#supervisor_position").val(posid);
 		$("#divEditDepartment").css('display','block');
 		$("#department_code").attr('disabled',true);
 		return false;
 
-	});
+	};
 	
+	$('#department_table').on('click','a',function(e)
+		{
+			e.preventDefault();
+			var id=e.target.id;
+			index=id.indexOf('departmentedit');
+			if(index>=0)
+			{
+				
+				departmentEdit(Number(id.substring(("departmentedit").length)));
+			}
+		});
 	
 
 	//------------------------------------------------------------------
 	//Function to save department
 	//------------------------------------------------------------------
-	$("#save_department").click(function()
+	$("#edit_department_form").submit(function()
 	{
 		if($('#department_code').val() && $('#department_name').val())
 		{
-		  var postdata=$("#edit_department_form").serialize();
-		  $.ajax(
-	      {
-	        type: "POST",
-	        url: "hr/department/save",
-	        data: postdata, // serializes the form's elements.
-	        success: function(data)
-	        {
-	          $('#department_table tr:last').after(data);
-	        }
-
-	      });
+		  $("#department_code").attr('disabled',false);
 	      $("#department_code").attr('disabled',false);
 	      $("#divEditDepartment").css('display','none');
+		}
+		else
+		{
+			return false;
 		}
 	});
 });

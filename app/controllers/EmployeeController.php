@@ -68,12 +68,43 @@ class EmployeeController extends BaseController
 	}
 	public function deleteEmployee()
 	{
-		return "employee deleted";
+		$empid=Input::get('_delete_employee_id');
+		
+		if($empid>0)
+		{
+			$employee=Employee::with('employee_portal')
+								->with('position')->find($empid);
+			$employee_portal=$employee->employee_portal;
+
+			if($employee_portal->imagefile)
+			{
+				$filepath='./images';
+				$filename=$employee->employee_portal->imagefile;
+
+				if ($filename!=''? file_exists ($filepath.'/'.$filename) : false)
+				{
+					unlink ($filepath.'/'.$filename); 	
+				}
+			}
+			
+			if($employee->position)
+			{
+				$position=$employee->position;
+				$position->employee_id=null;
+				$position->open=true;
+				$position->save();
+			}
+			
+			$employee->delete();
+			$employee_portal->delete();
+			return('success');
+		}
 	}
 
-	public function getOpenEmployeeList()
+	public function getOpenEmployeeList($includeemployee='')
 	{
 		$ids=Position::whereNotNull('employee_id')->lists('employee_id');
+
 		if(!is_array($ids))
 		{
 			$ids=array($ids);
@@ -82,6 +113,13 @@ class EmployeeController extends BaseController
 		
 		$employee_array=array(array('id'=>0,'description'=>'------------None---------------'));
 		
+		if($includeemployee!='')
+		{
+			$inc_employee=Employee::where('login','=',$includeemployee)->get()->first();
+			$employee_array[]=array('id'=>$inc_employee->id,
+				'description'=>$inc_employee->login.' ('.$inc_employee->first_name." ".$inc_employee->last_name.')');
+		}
+
 		foreach($employees as $employee)
 		{
 			
@@ -89,6 +127,9 @@ class EmployeeController extends BaseController
 				'description'=>$employee->login.' ( '.$employee->first_name." ".$employee->last_name." ) ");
 			
 		}
+		
+		
+
 		return json_encode($employee_array);
 	}
 }

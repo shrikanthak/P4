@@ -79,10 +79,6 @@ $( document ).ready(function()
     
   });
   
-  $("#delete").change(function()
-  {
-    
-  });
 
   $("#search_employee").change(function()
   {
@@ -99,6 +95,7 @@ $( document ).ready(function()
              $("#first_name").val($(data).find('#_first_name').text());
              $("#last_name").val($(data).find('#_last_name').text());
              $("#_employee_id").val($(data).find('#_emp_id').text());
+             $("#_login_id").val($(data).find('#_login').text());
              $("#_delete_employee_id").val($(data).find('#_emp_id').text());
              $("#edit_employee_button").bind('click',function()
               {
@@ -110,7 +107,7 @@ $( document ).ready(function()
               {
 
                  if(confirm('You are about to delete employee: '+
-                    $("#_first_name").html()  + ' ' + $("#_last_name").html()))
+                    $("#first_name").val()  + ' ' + $("#last_name").val()))
                  {
                     $.ajax(
                     {
@@ -119,7 +116,13 @@ $( document ).ready(function()
                         data:$('#employee_delete_form').serialize(),
                         success: function(data)
                         {
-                          alert(data);
+                          if(data=='success')
+                          {
+                             itemNewCurrent("current");
+                             $('#loginList option[value="'+$('#_login_id').val()+'"]').remove();
+                             $('#search_employee').val('');
+                             
+                          }
                         }
 
                     });

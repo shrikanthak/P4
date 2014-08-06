@@ -1,6 +1,12 @@
+
+
+
+
 $(document).ready(function()
 {
-	// Position Radio Button Click
+	/******************************************************
+	This function retrieves the position table
+	*******************************************************/
 	var GetPositionTable=function()
 	{
 	 
@@ -18,20 +24,136 @@ $(document).ready(function()
 
 	};
 
-//update the department table
-	$("select#position_department").change(function()
+	var PopulateOpenEmployeeSelectorList=function(login)
+	{
+		if (login===undefined)
+		{
+			login='';
+		}
+	
+		//load up the employee list. Include the current employee also
+		$.ajax(
+			{
+		     type: "GET",
+		     url: "hr/openemployeelist/"+login,
+		     success: function(data)
+		     {
+		     	var employees=JSON.parse(data);
+				var options='';
+				var select_employee=0;
+				
+				for (var i = 0; i < employees.length; i++) 
+				{
+				  options += '<option value="' + employees[i]['id'] + '">' + employees[i]['description'] + '</option>';
+				  if (login== (employees[i]['description']).substring(0,(employees[i]['description']).indexOf('(')-1))
+				  {
+				  	select_employee=i;
+				  }
+				}
+	
+				$("#employee_for_position").html(options);
+				$("#employee_for_position option[value='"+
+					String(employees[select_employee]['id'])+"']").attr('selected','selected');
+				//$("#employee_for_position").text(employees[select_employee]['description']);
+		     }
+
+		});
+	};
+
+/****************************************************************************
+	This function sets up the Supervisor selector list.
+	In case of edit, if currentpos !=0 it excludes currentpos and its descendents 
+	**************************************************************************/
+	var PopulateSupervisorSelectorList=function(depid,currentpos,selectid)
+	{
+		if(depid===undefined)
+		{
+			depid=0;
+		}
+		if(currentpos===undefined)
+		{
+			currentpos=0;
+		}
+		if(selectid===undefined)
+		{
+			selectid=0;
+		}
+		$.ajax(
+			{
+			     type: "GET",
+			     url: "hr/supervisorlist/"+String(depid)+"/"+String(currentpos),
+			     success: function(data)
+			     {
+			     	var positions=JSON.parse(data);
+					var options='';
+					for (var i = 0; i < positions.length; i++) 
+					{
+					  options += '<option value="' + positions[i]['id'] + '">' + positions[i]['description'] + '</option>';
+					}
+					$("#supervisor_position").html(options);
+					$("#supervisor_position option[value='"+String(selectid)+"']").attr('selected','selected');
+			     }
+			});
+	};
+
+	/***************************************************************
+	This function sets up the position edit form on selection of edit.
+	*****************************************************************/
+	var positionEdit=function(posid)
 	{
 
+		$('#position_title').val($('#positiontitle'+posid).text());
+		$('#_position_id').val($('#positionid'+posid).text());
+		
+		if($('#positionhraccess'+posid).text()=='Allowed')
+		{
+			$('#_hr_access').val(1)
+			$("#hr_access").attr('checked',true);
+		}
+		else
+		{
+			$('#_hr_access').val(1)
+			$("#hr_access").attr('checked',true);
+		}
+	     var login='';
+	     var employee=$('#positionemployee'+posid).text();
+	     if (employee !='')
+	     {
+	     	login= employee.substring(0,employee.indexOf('(')-1);
+	     }
+	   	
+	   	PopulateOpenEmployeeSelectorList(login);
+	   	//This will exclude the current employee and reportees from appearing on the list
+
+	   	var positiondesc=$('#positionsupervisor'+ posid).text();
+	   	var sup_posid=0;
+	   	if(positiondesc!='')
+	   	{
+	   		var firstchar=positiondesc.indexOf('-')+1;
+			var lastchar=positiondesc.indexOf(':');
+			sup_posid=positiondesc.substr(firstchar,lastchar-firstchar);
+			
+	   	}
+
+	   	PopulateSupervisorSelectorList($('#_department_id').val(),posid,sup_posid);
+
+		$("#divEditPosition").css('display','block');
+
+	}
+
+	var positionDelete=function()
+	{
+		
+	}
+//update the positions table
+	$("select#position_department").change(function()
+	{
 		GetPositionTable();
 		$("#_department_id").val($("select#position_department").val());
 	});
 
 	$("[id$=RadioPositions]").click(GetPositionTable);
 
-	$("[id^=positionedit]").click(function()
-		{
-			
-		});
 	
 //Fired when new position button is clicked
 	$("#new_position").click(function()
@@ -45,40 +167,14 @@ $(document).ready(function()
 			$("#_hr_access").attr('checked',false);
 
 			var depid=$("#position_department").val();
-			$.ajax(
-			{
-			     type: "GET",
-			     url: "hr/supervisorlist/"+depid+"/0",
-			     success: function(data)
-			     {
-			     	var positions=JSON.parse(data);
-					var options='';
-					for (var i = 0; i < positions.length; i++) 
-					{
-					  options += '<option value="' + positions[i]['id'] + '">' + positions[i]['description'] + '</option>';
-					}
-					$("#supervisor_position").html(options);
-			     }
-			});
 
-			$.ajax(
-			{
-			     type: "GET",
-			     url: "hr/openemployeelist/",
-			     success: function(data)
-			     {
-			     	var employees=JSON.parse(data);
-					var options='';
-					for (var i = 0; i < employees.length; i++) 
-					{
-					  options += '<option value="' + employees[i]['id'] + '">' + employees[i]['description'] + '</option>';
-					}
-					$("#employee_for_position").html(options);
-			     }
-			});
+			PopulateSupervisorSelectorList(depid);
+			PopulateOpenEmployeeSelectorList();
 
 		});
 
+
+//position form submitted
 	$("#position_form").submit(function()
 	{
 		if($("#position_title").val())
@@ -100,20 +196,31 @@ $(document).ready(function()
 		return false;
 	});
 
+//setting the HR access option
 	$("#hr_access").click(function()
 	{
 		$("#_hr_access").val($("#hr_access").val());
-	})
-
-	$("[id^=positionedit]").click(function()
-	{
-
 	});
 
-	$("[id^=positiondelete]").click(function()
-	{
-		
-	});
+//Clicking the edit button on a position 
+	$('#positions_table_data').on('click','a',function(e)
+		{
+			e.preventDefault();
+			var id=e.target.id;
+			index=id.indexOf('positionedit');
+			if(index>=0)
+			{
+				
+				positionEdit(Number(id.substring(("positionedit").length)));
+			}
+
+			index=id.indexOf('positiondelete');
+			if(index>=0)
+			{
+				
+				positionDelete(Number(id.substring(("positiondelete").length)));
+			}
+		});
 	
 	$("#cancel_position_save").click(function()
 	{

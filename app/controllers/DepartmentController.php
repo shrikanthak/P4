@@ -21,8 +21,7 @@ class DepartmentController extends BaseController
 			$department->department_head_position_id=Input::get('supervisor_position');	
 		}
 		$department->save();
-		$department = Department::with('department_head')->find($department->id);
-		return View::make('department_table_row')->with('department',$department);
+		return Redirect::to('hrpage');
 
 	}
 }

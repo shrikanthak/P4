@@ -1,12 +1,5 @@
 <table class="table table-hover hrtable" id='department_table'>
-
-	<tr>
-		<th>Department Code</th><th>Department Name</th><th>Department Head Position</th>
-		<th></th> <th></th>
-	</tr>
-	@foreach($departments as $department)
-		@include('department_table_row',array('department'=>$department))
-	@endforeach
+		@include('department_table_row',array('departments'=>$departments))
 </table>
 
 
@@ -31,7 +24,7 @@
 			{{Form::label('supervisor_position','')}}
 			{{Form::select('supervisor_position',array(' '),null,array('class'=>'form-control'))}}
 		</div>
-		{{Form::button('Save',array('class'=>'btn btn-lg btn-info formmargin','id'=>'save_department'))}}
+		{{Form::submit('Save',array('class'=>'btn btn-lg btn-info formmargin','id'=>'save_department'))}}
 		
 	</div>
 	

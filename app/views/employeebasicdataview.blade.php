@@ -45,8 +45,8 @@ $head_of_department_id=$data['head_of_department_id']!=''?'/department'.'/'.$dat
 		</div>
 		<div class="col-xs-6">
 			{{Form::open(array('id'=>'employee_delete_form'))}}
-			<button type="button" id="delete_employee_button" class="btn btn-danger btn-lg pull-right formmargin">Delete Employee!</button>
-			<input name="_delete_employee_id" type="hidden" value="0" id='_delete_employee_id'></input>
+				<button type="button" id="delete_employee_button" class="btn btn-danger btn-lg pull-right formmargin">Delete Employee!</button>
+				<input name="_delete_employee_id" type="hidden" value={{$data['current_id']}} id='_delete_employee_id'></input>
 			{{Form::close()}}
 		</div>
 	</div>
