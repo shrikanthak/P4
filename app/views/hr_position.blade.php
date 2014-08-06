@@ -1,35 +1,34 @@
-{{Form::open(array('url' => '/position/edit', 'method' => 'POST','id'=>'position_form'))}}
-
-	<div class="row formmargin">
-		
-		<div class="col-xs-3">
-			<div class='form-group'>
-				{{ Form::label('position_department', 'Department') }}
-				{{ Form::select('position_department', $departments_list,null,array('class'=>'form-control')) }}
-			</div>
-		</div>
-
-		<div class="col-xs-9">
-			<div class='form-group'>
-				<label for="radioGroup2">Positions</label><br>
-				<input id="openRadioPositions" type="radio" name="position_status" value="1" checked='true'>
-				<label for="openRadioPositions" class="RadioButtonLabels" class='form'>Open</label>
-				<input id="filledRadioPositions" type="radio" name="position_status" value="0">
-				<label for="filledRadioPositions" class="RadioButtonLabels">Filled</label>
-				<input id="allRadioPositions" type="radio" name="position_status" value="3">
-				<label for="allRadioPositions" class="RadioButtonLabels">All</label>
-			</div>
-		</div>
+<div class="row formmargin">
 	
-	</div>
-
-	<div class= "row formmargin" style="display:none" id="divPositions">
-		<div class="col-xs-12" id="positions_table_data">
-			
+	<div class="col-xs-3">
+		<div class='form-group'>
+			{{ Form::label('position_department', 'Department') }}
+			{{ Form::select('position_department', $departments_list,null,array('class'=>'form-control')) }}
 		</div>
-		<input type="button" name="new_position" id='new_position' class="btn btn-lg btn-info pull-left formmargin" value="New Position">
 	</div>
 
+	<div class="col-xs-9">
+		<div class='form-group'>
+			<label for="radioGroup2">Positions</label><br>
+			<input id="openRadioPositions" type="radio" name="position_status" value="1" checked='true'>
+			<label for="openRadioPositions" class="RadioButtonLabels" class='form'>Open</label>
+			<input id="filledRadioPositions" type="radio" name="position_status" value="0">
+			<label for="filledRadioPositions" class="RadioButtonLabels">Filled</label>
+			<input id="allRadioPositions" type="radio" name="position_status" value="3">
+			<label for="allRadioPositions" class="RadioButtonLabels">All</label>
+		</div>
+	</div>
+
+</div>
+
+<div class= "row formmargin" style="display:none" id="divPositions">
+	<div class="col-xs-12" id="positions_table_data">
+		
+	</div>
+	<input type="button" name="new_position" id='new_position' class="btn btn-lg btn-info pull-left formmargin" value="New Position">
+</div>
+
+{{Form::open(array('url' => '/position/edit', 'method' => 'POST','id'=>'position_form'))}}
 	<div class="row formmargin" id="divEditPosition" style="display:none">
 
 		<div class="col-xs-3">
@@ -58,5 +57,4 @@
 		{{Form::hidden('_department_id',1,array('id'=>'_department_id'))}}
 		{{Form::hidden('_hr_access','',array('id'=>'_hr_access'))}}
 	</div>
-
 {{Form::close()}}

@@ -27,19 +27,26 @@
 
 ##How to Use the Web Application
 This is an employee portal web application that will typically be used as an intranet application in a company. It consists of 2 parts:
-1. Front end: Employees can edit their profiles, view other's profiles searc for people and also view org chart for the company
+1. Front end: Employees can edit their profiles, view other's profiles searc for people and also view org chart for the company. Click on a position in the org chart to navigate up and down.
 
 2. Back end: The HR administration, that adds, edits employees and positions. Typically in a company this would be a different application, but for the purposes of this project, it is included with the front end.
 
-Open the website:
+
+Opening the website:
 log on as login:jdane password:halwa. Jenny is a part of HR as the Vice President of HR. She has access to the hr Page and can add and edit employees and positions.
+
+
 
 The general procedure to add an employee is:
 Add an employee, then create a position in a department and and the employee to the position.
 
-Log on as a different employee (same password) and search for another one. Also update your profile and add a picture. You can also change your password.
 
+
+Log on as a different employee (same password) and search for another one. Also update your profile and add a picture. You can also change your password.
 The org structure is connected on position.
 
 
 The schema can be viewed in the pdf schema.pdf
+
+
+I'm not very savvy at web page design, which will be evident from some of the page layouts. The HR page needs to be redone for sure. I need to put in a navigation pane on the left. It will be a cleaner design both structurally and functionally.

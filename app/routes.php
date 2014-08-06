@@ -44,6 +44,7 @@ Route::get('hr/openemployeelist/{includeemployee?}', 'EmployeeController@getOpen
 Route::get('hr/positionstable/{depid}/{positionstatus}','PositionsController@getPositionsTable');
 Route::get('hr/supervisorlist/{depid}/{currentpos}','PositionsController@getSupervisorPositionsList');
 Route::post('hr/position/save','PositionsController@savePosition');
+Route::post('hr/position/delete','PositionsController@deletePosition');
 
 
 //Departments Controllers

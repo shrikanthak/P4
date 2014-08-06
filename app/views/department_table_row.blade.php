@@ -11,6 +11,6 @@
 									$department->department_head->id.': '
 									.$department->department_head->title:''}}</td>
 		<td><a id={{'departmentedit'.$department->id}} href="#">Edit</a></td>
-		<td><a id={{'departmentdelete'.$department->id}} href="#">Delete</a></td>
+		<!--td><a style='color:red' id={{'departmentdelete'.$department->id}} href="#">Delete</a></td-->
 	</tr>
 @endforeach

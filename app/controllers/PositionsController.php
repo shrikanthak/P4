@@ -152,5 +152,28 @@ class PositionsController extends BaseController
 		return "success";
 	}
 
+	public function deletePosition()
+	{
+		$posid=Input::get('_delete_position_id');
+		if ($posid>0)
+		{
+			$position=Position::with('reportee_positions')->find($posid);
+			if (count($position->reportee_positions)>0)
+			{
+				return "Error: Cannot Delete Position. It has reportees.";
+			}
+			else
+			{
+				$position->delete();
+				return "success";
+			}
+
+		}
+		else
+		{
+			return "Error: Position not found in database.";
+		}
+	}
+
 	private static $_posid=0;
 }

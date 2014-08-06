@@ -20,6 +20,7 @@ $(document).ready(function()
 			$("#positions_table_data").html(data);
 	     }
 	  });
+	  $("#divPositions").find('#position_error_message').remove();
 	  $("#divPositions").css('display','block');
 
 	};
@@ -141,9 +142,35 @@ $(document).ready(function()
 
 	}
 
-	var positionDelete=function()
+	var positionDelete=function(posid)
 	{
-		
+		if (posid===undefined)
+		{
+			return;
+		}
+		if (confirm('You are about to delete position'+('#positiontitle'+posid).text()+". Please confirm."))
+		{
+			var postdata=$("#positiondelete"+posid).serialize();
+			$.ajax(
+			{
+				 type: "POST",
+			     url: "/hr/position/delete",
+			     data: postdata,
+			     success: function(data)
+			     {
+					if(data=='success')
+					{
+						GetPositionTable();
+						$("#divEditPosition").css('display','none');
+					}
+					else
+					{
+						$('#divPositions').prepend("<div class='flash-message' id='position_error_message'>" + data + "</div>");
+					}
+			     }
+			});
+		}
+
 	}
 //update the positions table
 	$("select#position_department").change(function()
@@ -219,7 +246,7 @@ $(document).ready(function()
 			if(index>=0)
 			{
 				
-				positionDelete(Number(id.substring(("positiondelete").length)));
+				positionDelete(Number(id.substring(("positiondelete").length)),e);
 			}
 		});
 	
