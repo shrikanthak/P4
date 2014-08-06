@@ -41,6 +41,7 @@ class PositionsController extends BaseController
 					$positions=$positions->merge(Position::with('employee','supervisor_position','department')
 								->where('department_id','=',$corp_department->id)->get());
 				}
+				
 			}
 	
 		}

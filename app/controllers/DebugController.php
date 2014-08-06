@@ -73,7 +73,9 @@ class DebugController extends BaseController
 		{
 			//Seeding Departments
 
-			$head=Department::create(array('name' => 'Corporate Head', 'code'=>'COR','corporate_head'=>true));
+			$head=Department::create(array('name' => 'Corporate Head', 'code'=>'COR','corporate_head'=>1));
+			$head->corporate_head=1;
+			$head->save();
 			//$finance=Department::create(array('name' => 'Finance & Accounting', 'code'=>'FIN'));
 			//$marketing=Department::create(array('name' => 'Marketing & Sales','code'=>'MAR'));
 			//$manufacturing=Department::create(array('name' => 'Manufacturing & Operations','code'=>'MNO'));

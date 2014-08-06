@@ -112,8 +112,8 @@ $(document).ready(function()
 		}
 		else
 		{
-			$('#_hr_access').val(1)
-			$("#hr_access").attr('checked',true);
+			$('#_hr_access').val(0)
+			$("#hr_access").attr('checked',false);
 		}
 	     var login='';
 	     var employee=$('#positionemployee'+posid).text();
@@ -180,10 +180,11 @@ $(document).ready(function()
 		if($("#position_title").val())
 		{
 			var postdata=$('#position_form').serialize();
+			alert(postdata);
 			$.ajax(
 			{
 				 type: "POST",
-			     url: "hr/position/save",
+			     url: "/hr/position/save",
 			     data:postdata,
 			     success: function(data)
 			     {
@@ -192,6 +193,7 @@ $(document).ready(function()
 			     }
 			});	
 		}
+
 		$("select#position_department").attr('disabled',false);
 		return false;
 	});
@@ -199,7 +201,7 @@ $(document).ready(function()
 //setting the HR access option
 	$("#hr_access").click(function()
 	{
-		$("#_hr_access").val($("#hr_access").val());
+		$("#_hr_access").val($('#hr_access').is(':checked')?1:0);
 	});
 
 //Clicking the edit button on a position 
