@@ -148,7 +148,7 @@ $(document).ready(function()
 		{
 			return;
 		}
-		if (confirm('You are about to delete position'+('#positiontitle'+posid).text()+". Please confirm."))
+		if (confirm('You are about to delete position'+$('#positiontitle'+posid).text()+". Please confirm."))
 		{
 			var postdata=$("#positiondelete"+posid).serialize();
 			$.ajax(
