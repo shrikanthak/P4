@@ -180,7 +180,6 @@ $(document).ready(function()
 		if($("#position_title").val())
 		{
 			var postdata=$('#position_form').serialize();
-			alert(postdata);
 			$.ajax(
 			{
 				 type: "POST",
