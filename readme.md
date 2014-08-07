@@ -1,7 +1,7 @@
 #Project 4 -- Employee Portal
 
 ##Link to site
-[Employee Portal](p4-shriak.gopagoda.com)
+[Employee Portal](shriak-p4.gopagoda.com)
 
 ##The following are the objectives of the project completed so far
 
