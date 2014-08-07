@@ -70,7 +70,8 @@
 			</div>
 			<div class="row formmargin">
 				<div class='col-xs-12'>
-					{{Form::label('expertise','')}}
+					{{Form::label('expertise','Add your expertise here for others to search. 
+					Check the dropwon box for your expertise before adding a new one.')}}
 				</div>
 			</div>
 			<datalist id='expertiselist'>
