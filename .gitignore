@@ -7,5 +7,3 @@ composer.lock
 .DS_Store
 Thumbs.db
 environment.php
-*.jpg
-*.jpeg
