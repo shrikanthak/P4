@@ -17,7 +17,7 @@ class CreateExpertiseTable extends Migration {
 		{
 			//Setting up the columns
 			$table->increments('id');
-			$table->string('expertise')->nullable(false)->unique();
+			$table->string('description')->nullable(false)->unique();
 			$table->timestamps();
 		});
 	}

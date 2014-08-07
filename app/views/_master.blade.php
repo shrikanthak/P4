@@ -67,7 +67,7 @@
 				<!--submit search via jquery-->
 					<div class="col-xs-8"></div>
 					<div class="col-xs-3">	
-						<input type="text" name="search" id='search' class="form-control searchform" placeholder="Name, Login ID or Department">
+						<input type="text" name="search" id='search' class="form-control searchform" placeholder="Name, Login ID, Department, or Expertise">
 					</div>
 					<div class="col-xs-1">
 						<input type="button" name="submit_search" class="btn btn-info searchform" value="Search" id="submit_search">

@@ -55,7 +55,6 @@ $(document).ready(function()
 				$("#employee_for_position").html(options);
 				$("#employee_for_position option[value='"+
 					String(employees[select_employee]['id'])+"']").attr('selected','selected');
-				//$("#employee_for_position").text(employees[select_employee]['description']);
 		     }
 
 		});

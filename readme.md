@@ -9,27 +9,31 @@
 ..*View Employee Information
 ..*Employee editing his personal information
 ..*View Org chart of employee and department
+..*Add an expertise
+
 
 ###HR functionality
 ..*Add employee
 ..*Add position to a department and associate with employee and supervisor
 ..*Add a department
 
+###Search Capability
+Search based on name, login id, department or expertise.
+
+
 ##Functions to be completed
-..*Reset Password
-..*Edit and Delete Position
-..*Delete Employee
 ..*Validation and error checks
 
 ##The following packages are used
 ..*Paste\Pre for rendering array(debug)
+..*Laravel Debugger
 ..*Google visualization package for org chart display
 
 ##How to Use the Web Application
 This is an employee portal web application that will typically be used as an intranet application in a company. It consists of 2 parts:
 1. Front end: Employees can edit their profiles, view other's profiles searc for people and also view org chart for the company. Click on a position in the org chart to navigate up and down.
 
-2. Back end: The HR administration, that adds, edits employees and positions. Typically in a company this would be a different application, but for the purposes of this project, it is included with the front end.
+2. Back end: The HR administration, that adds, edits employees and positions. Typically in a company this would be a different application, but for the purposes of this project, it is included.
 
 
 Opening the website:

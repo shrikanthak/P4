@@ -18,7 +18,7 @@
 		{{Form::text('search_employee','',array('class'=>'form-control pull-left','id'=>'search_employee','placeholder'=>'Search Login ID Only','list'=>'loginList'))}}
 		<datalist id="loginList">
 			@foreach($loginArray as $login)
-				<option value={{$login}}>{{$login}}</option>
+				<option value={{$login}} id={{$login}}>{{$login}}</option>
 			@endforeach
 		</datalist>
 	</div>

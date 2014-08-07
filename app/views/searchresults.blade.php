@@ -5,7 +5,8 @@
 @section('bodycontent')
 	
 
-	<?php 
+	<?php
+	
 		foreach($departments as $department)
 		{
 			echo'<div class="panel panel-default">';
@@ -22,43 +23,63 @@
 		}
 
 
-		if (!is_null($employee_ids))
+		
+
+			
+		foreach($employees as $employee)
 		{
-
-			if(!is_array($employee_ids))
-			{
-				$employee_ids=array($employee_ids);
-			}
-			foreach($employee_ids as $empid)
-			{
-
-				$data=EmployeePortalController::GetEmployeeViewData($empid);
-				echo'<div class="panel panel-default">';
-					echo'<div class="panel-body">';
-						echo View::make('employeebasicdataview')
-							->with('data',$data)
-							->with('addEditForm',false);
-											
-							echo'<div class="row">';
-								
-								echo'<div class="col-xs-2">';
-									echo'<h4><a href="/employee/view/'.$data['current_id'].'">View Details</a></h4>';
-								echo'</div>';
-								
-								echo'<div class="col-xs-2">';
-									echo'<h4><a href="/employee/orgchart/'.$data['current_id'].'">View Org Chart</a></h4>';
-								echo'</div>';
-								
-								echo'<div class="col-xs-8">';
+			$data=EmployeePortalController::GetEmployeeViewData($employee->id);
+			echo'<div class="panel panel-default">';
+				echo'<div class="panel-body">';
+					echo View::make('employeebasicdataview')
+						->with('data',$data)
+						->with('addEditForm',false);
+										
+						echo'<div class="row">';
+							
+							echo'<div class="col-xs-2">';
+								echo'<h4><a href="/employee/view/'.$data['current_id'].'">View Details</a></h4>';
+							echo'</div>';
+							
+							echo'<div class="col-xs-2">';
+								echo'<h4><a href="/employee/orgchart/'.$data['current_id'].'">View Org Chart</a></h4>';
+							echo'</div>';
+							
+							echo'<div class="col-xs-8">';
+								$i=0;
+								$expertise_string='';
+								$expertise_coll=$employee->expertise;
+								foreach($expertise_coll as $area)
+								{	
+									$pos=strpos($area->description,strtoupper($searchString));
 									
-								echo'</div>';
+									if(!($pos===false))
+									{
+										if ($i==0)
+										{
+											$expertise_string='<h4>Expertise: '.$area->description;
+											$i++;
+										}
+										else
+										{
+											$expertise_string.=', '.$area->description;
+										}
+									}
+								}
+								
+								if($expertise_string!='')
+								{
+									echo $expertise_string."</h4>";
+								}
 
 							echo'</div>';
 
-					echo'</div>';
+						echo'</div>';
+
 				echo'</div>';
-			}
+			echo'</div>';
 		}
+		
 
 	?>
 		

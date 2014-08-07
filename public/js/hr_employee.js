@@ -72,6 +72,7 @@ $( document ).ready(function()
           $("#currentEmployee").attr("checked",true);
           itemNewCurrent("current");
           $('#divViewEmployee').html(data);
+          $('#loginList')
         }
 
       });

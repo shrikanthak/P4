@@ -17,6 +17,8 @@ class EmployeePortalController extends BaseController {
 	|
 	*/
 
+	private static $_searchString='';
+
 	public function __construct() {
 
 		# Make sure BaseController construct gets called
@@ -27,7 +29,25 @@ class EmployeePortalController extends BaseController {
 	public function viewEmployee($empid)
 	{
 		$data=EmployeePortalController::GetEmployeeViewData($empid);
-		return View::make('employeeview')->with('data',$data)->with('addEditForm',false);
+
+		$expertisecollection=Expertise::orderBy('description')->get();
+		$expertise_list=array();
+		foreach($expertisecollection as $expertise)
+		{
+			$expertise_list[$expertise->id]=$expertise->description;
+		}
+		$employee_expertise_list=array();
+		$employee=Employee::with('expertise')->find($empid);
+		foreach($employee->expertise as $expt)
+		{
+
+			$employee_expertise_list[]=array('id'=>$expt->id,'description'=>$expt->description);
+		}
+
+		return View::make('employeeview')
+		->with('data',$data)->with('expertise_list',$expertise_list)
+		->with('employee_expertise_list',$employee_expertise_list)
+		->with('addEditForm',false);
 	}
 	
 	public function viewOrgChart($posid, $linktosupervisor=true)
@@ -141,6 +161,22 @@ class EmployeePortalController extends BaseController {
 		}
 		
 		$employee->push();
+	
+	//Saving the expertise
+		$expertise_array_id=array();
+		for($i=1;$i<=3;$i++)
+		{
+			for($j=1;$j<=6;$j++)
+			{
+				if (Input::get('expertise_row'.$i.'_col'.$j)!='')
+				{
+					$expertise=Expertise::firstOrCreate(array('description'=>strtoupper(Input::get('expertise_row'.$i.'_col'.$j))));
+					$expertise_array_id[]=$expertise->id;
+				}
+			}
+		}
+
+		$employee->expertise()->sync($expertise_array_id);
 
 		if ($flash_message!='')
 		{
@@ -156,6 +192,7 @@ class EmployeePortalController extends BaseController {
 	public function search($input)
 	{
 		$inputString=$input;
+		EmployeePortalController::$_searchString=$input;
 		
 		//Search for Departments
 		$departments=Department::with('department_head.employee')
@@ -163,11 +200,19 @@ class EmployeePortalController extends BaseController {
 								->orWhere('code','like','%'.$inputString.'%')
 								->get();
 
-		$employee_ids=Employee::where('first_name','like','%'.$inputString.'%')
+		$employees=Employee::with('expertise')->where('first_name','like','%'.$inputString.'%')
 							->orWhere('last_name','like','%'.$inputString.'%')
-							->orWhere('login','like','%'.$inputString.'%')->distinct()->lists('id');
+							->orWhere('login','like','%'.$inputString.'%')->distinct()
+							->orWhereHas('expertise',function($query)
+								{
+									$query->where('description','like','%'.
+										EmployeePortalController::$_searchString.'%');
+								
+								})->get();
 
-		return View::make('searchresults')->with('employee_ids',$employee_ids)->with('departments',$departments);
+		return View::make('searchresults')
+			->with('employees',$employees)
+			->with('departments',$departments)->with('searchString',$inputString);
 
 	}
 

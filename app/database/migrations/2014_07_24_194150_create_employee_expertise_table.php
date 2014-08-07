@@ -24,6 +24,7 @@ class CreateEmployeeExpertiseTable extends Migration {
 			//defining foreign keys
 			$table->foreign('employee_id')->references('id')->on('employees');
 			$table->foreign('expertise_id')->references('id')->on('expertise');
+			$table->primary(array('employee_id', 'expertise_id'));
 
 		});
 	}
