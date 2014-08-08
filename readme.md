@@ -31,7 +31,8 @@ Search based on name, login id, department or expertise.
 
 ##How to Use the Web Application
 This is an employee portal web application that will typically be used as an intranet application in a company. It consists of 2 parts:
-1. Front end: Employees can edit their profiles, view other's profiles searc for people and also view org chart for the company. Click on a position in the org chart to navigate up and down.
+1. Front end: Employees can edit their profiles, view other's profiles searc for people and also view org chart for the company. Click on a position in the org chart to navigate up and down the chart.
+The org chart shows the hierarchy starting at the supervisor of the employee.
 
 2. Back end: The HR administration, that adds, edits employees and positions. Typically in a company this would be a different application, but for the purposes of this project, it is included.
 

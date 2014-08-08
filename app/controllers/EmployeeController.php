@@ -94,7 +94,7 @@ class EmployeeController extends BaseController
 				$position->open=true;
 				$position->save();
 			}
-			
+			$employee->expertise()->detach();
 			$employee->delete();
 			$employee_portal->delete();
 			return('success');
